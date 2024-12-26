@@ -1,0 +1,213 @@
+/* General styles for the header */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: url("../assets/hbg.png") no-repeat center center;
+    background-size: cover;
+    padding: 0.5vw 2vw;
+    /* padding based on vw */
+}
+
+.header__logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.header__logo-image {
+    width: 4.17vw;
+    /* 80px converted to vw (80px / 1920px * 100) */
+    height: 4.17vw;
+    /* 80px converted to vw */
+    max-width: 80px;
+    /* max-width remains 80px */
+    max-height: 80px;
+    /* max-height remains 80px */
+    margin-right: 1.04vw;
+    /* 20px converted to vw */
+}
+
+.header__title {
+    font-family: var(--title-font);
+    font-size: 2vw;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Center the search bar */
+.header__search {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.header__search-form {
+    display: flex;
+    align-items: center;
+    width: 20vw;
+    position: relative;
+}
+
+.header__search-bar {
+    width: 100%;
+    padding: 0.42vw 2.08vw 0.42vw 0.52vw;
+    border: 1px solid #ccc;
+    border-radius: 0.26vw;
+    font-size: 0.83vw;
+}
+
+.header__search-button {
+    position: absolute;
+    right: 0.52vw;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: #666;
+    font-size: 0.94vw;
+    /* Adjust icon size */
+    transition: color 0.3s ease;
+}
+
+.header__search-button:hover {
+    color: #333;
+}
+
+.header__search-bar:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.052vw rgba(0, 123, 255, 0.25);
+}
+
+.header__categories {
+    margin-right: 1.04vw;
+    position: relative;
+}
+
+.header__categories-title {
+    font-size: 0.83vw;
+    font-weight: bold;
+    color: #333;
+    padding: 0.42vw;
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+    border-radius: 0.26vw;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    width: 7.2vw;
+}
+
+.header__categories-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 0.26vw;
+    list-style: none;
+    padding: 0.52vw 0;
+    width: 100%;
+    z-index: 100;
+    margin-top: -1px;
+}
+
+.header__categories-dropdown li {
+    padding: 0.52vw;
+    /* 10px converted to vw */
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.header__categories-dropdown li:hover {
+    background-color: #f0f0f0;
+}
+
+.header__buttons {
+    display: flex;
+    align-items: center;
+    gap: 1.04vw;
+}
+
+.header__pro-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 0.42vw;
+    border: none;
+    border-radius: 0.26vw;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.83vw;
+    width: 7.2vw;
+    text-align: center;
+}
+
+.header__login-button {
+    background-color: #ff5733;
+    color: #fff;
+    padding: 0.42vw 0.78vw;
+    border: none;
+    border-radius: 0.26vw;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.73vw;
+    transition: background-color 0.3s;
+}
+
+.header__login-button:hover {
+    background-color: #ff2d00;
+}
+
+.header__user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+    font-size: 0.83vw;
+    white-space: nowrap;
+    background-color: #f8f9fa;
+    padding: 0.42vw 0.78vw;
+    border-radius: 0.26vw;
+    border: 1px solid #ccc;
+}
+
+.header__username {
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.header__username:hover {
+    color: #ff6b35;
+}
+
+.header__logout-button {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 0.42vw 0.78vw;
+    border: none;
+    border-radius: 0.26vw;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.73vw;
+    transition: background-color 0.3s;
+}
+
+.header__pro-button:hover {
+    background-color: #0056b3;
+}
+
+.header__login-button:hover,
+.header__logout-button:hover {
+    background-color: #c82333;
+}

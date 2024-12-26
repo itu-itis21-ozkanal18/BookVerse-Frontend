@@ -1,0 +1,243 @@
+.home-container {
+    min-height: 100vh;
+    background-color: var(--background-color);
+}
+
+/* Hero Section */
+.hero-section {
+    height: 40vw;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../assets/hbg.png');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.hero-content {
+    max-width: 60vw;
+}
+
+.hero-content h1 {
+    font-size: 3.5vw;
+    font-family: var(--title-font);
+    margin-bottom: 1vw;
+}
+
+.hero-content p {
+    font-size: 1.5vw;
+    font-family: var(--text-font);
+    margin-bottom: 2vw;
+}
+
+.cta-button {
+    padding: 1vw 3vw;
+    font-size: 1.2vw;
+    background-color: #ff6b35;
+    color: white;
+    border: none;
+    border-radius: 0.5vw;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #ff8a5c;
+}
+
+/* Common Section Styles */
+.featured-section,
+.new-releases-section,
+.popular-section {
+    padding: 4vw 8vw;
+}
+
+.featured-section h2,
+.new-releases-section h2,
+.popular-section h2 {
+    font-size: 2vw;
+    font-family: var(--title-font);
+    margin-bottom: 2vw;
+    color: #333;
+}
+
+/* Featured Books Carousel */
+.books-carousel {
+    display: flex;
+    overflow-x: auto;
+    gap: 2vw;
+    padding: 1vw 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.books-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+/* Book Cards - Common Styles */
+.featured-book-card,
+.book-card {
+    background: white;
+    border-radius: 0.5vw;
+    overflow: hidden;
+    box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+/* Featured Book Cards */
+.featured-book-card {
+    flex: 0 0 15vw;
+    position: relative;
+}
+
+/* Hover Effects */
+.featured-book-card:hover,
+.book-card:hover {
+    transform: translateY(-0.5vw);
+}
+
+/* Book Images */
+.featured-book-card img,
+.book-card img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+}
+
+/* Book Info Section */
+.featured-book-card .book-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1vw;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+/* Grid Books */
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5vw;
+}
+
+.book-card .book-info {
+    padding: 1vw;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.book-info h3 {
+    font-size: 1vw;
+    margin-bottom: 0.5vw;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.book-info p {
+    font-size: 0.8vw;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.book-info .rating {
+    color: #ffd700;
+    font-size: 0.9vw;
+    margin-top: 0.5vw;
+}
+
+/* Categories Section */
+.categories-section {
+    padding: 4vw 8vw;
+    background-color: #f8f9fa;
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2vw;
+}
+
+.category-card {
+    background: white;
+    padding: 2vw;
+    border-radius: 0.5vw;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.1);
+}
+
+.category-card:hover {
+    transform: translateY(-0.5vw);
+}
+
+.category-card h3 {
+    font-size: 1.2vw;
+    font-family: var(--title-font);
+    margin-bottom: 0.5vw;
+    color: #333;
+}
+
+.category-card p {
+    font-size: 0.9vw;
+    color: #666;
+    font-family: var(--text-font);
+}
+
+/* Loading and Error States */
+.loading-container,
+.error-container {
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--text-font);
+    font-size: 1.2vw;
+    color: #666;
+}
+
+.loading-spinner {
+    border: 0.4vw solid #f3f3f3;
+    border-top: 0.4vw solid #ff6b35;
+    border-radius: 50%;
+    width: 3vw;
+    height: 3vw;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1vw;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.error-container button {
+    margin-top: 1vw;
+    padding: 0.8vw 2vw;
+    background-color: #ff6b35;
+    color: white;
+    border: none;
+    border-radius: 0.4vw;
+    cursor: pointer;
+    font-size: 1vw;
+    transition: background-color 0.3s ease;
+}
+
+.error-container button:hover {
+    background-color: #ff8a5c;
+}

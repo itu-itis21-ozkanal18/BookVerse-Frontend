@@ -1,0 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Raleway:wght@400;500&display=swap');
+
+:root {
+    --background-color: #eefcfb;
+    /* Add font variables for easy use */
+    --title-font: 'Playfair Display', serif;
+    --text-font: 'Raleway', sans-serif;
+}

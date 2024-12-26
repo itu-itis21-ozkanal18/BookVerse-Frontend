@@ -1,0 +1,119 @@
+.category-container {
+    padding: 2vw;
+    background-color: var(--background-color);
+}
+
+.category-title {
+    font-size: 2.5vw;
+    font-family: var(--title-font);
+    color: #333;
+    margin-bottom: 2vw;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+/* Categories Grid */
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2vw;
+    padding: 0 8vw;
+}
+
+.category-card {
+    background: white;
+    padding: 2vw;
+    border-radius: 0.5vw;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.1);
+}
+
+.category-card:hover {
+    transform: translateY(-0.5vw);
+}
+
+.category-card h3 {
+    font-size: 1.2vw;
+    font-family: var(--title-font);
+    margin-bottom: 0.5vw;
+    color: #333;
+}
+
+.category-card p {
+    font-size: 0.9vw;
+    color: #666;
+    font-family: var(--text-font);
+}
+
+/* Books Grid */
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5vw;
+    padding: 0 8vw;
+}
+
+.book-card {
+    background: white;
+    border-radius: 0.5vw;
+    overflow: hidden;
+    box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.book-card:hover {
+    transform: translateY(-0.5vw);
+}
+
+.book-card img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+}
+
+.book-info {
+    padding: 1vw;
+}
+
+.book-info h3 {
+    font-size: 1vw;
+    margin-bottom: 0.5vw;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.book-info p {
+    font-size: 0.8vw;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.book-info .rating {
+    color: #ffd700;
+    font-size: 0.9vw;
+    margin-top: 0.5vw;
+}
+
+/* Loading and Error States */
+.loading-message,
+.error-message {
+    text-align: center;
+    padding: 2vw;
+    font-size: 1.2vw;
+    color: #666;
+}
+
+.error-message {
+    color: #dc3545;
+    background-color: #ffe0e0;
+    border-radius: 0.5vw;
+    margin: 1vw 0;
+}

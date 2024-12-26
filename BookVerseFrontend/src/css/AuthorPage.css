@@ -1,0 +1,122 @@
+.author-container {
+    padding: 2vw;
+    background-color: var(--background-color);
+}
+
+.author-header {
+    padding: 2vw 8vw;
+    margin-bottom: 2vw;
+    background: white;
+    border-radius: 0.5vw;
+    box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.1);
+}
+
+.author-info h1 {
+    font-size: 2.5vw;
+    font-family: var(--title-font);
+    color: #333;
+    margin-bottom: 1vw;
+}
+
+.author-bio {
+    font-size: 1.1vw;
+    font-family: var(--text-font);
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 2vw;
+}
+
+.author-stats {
+    display: flex;
+    gap: 4vw;
+    padding-top: 1vw;
+    border-top: 1px solid #eee;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-number {
+    font-size: 1.8vw;
+    font-weight: bold;
+    color: #333;
+}
+
+.stat-label {
+    font-size: 0.9vw;
+    color: #666;
+    margin-top: 0.3vw;
+}
+
+.author-books {
+    padding: 0 8vw;
+}
+
+.author-books h2 {
+    font-size: 2vw;
+    font-family: var(--title-font);
+    color: #333;
+    margin-bottom: 2vw;
+}
+
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5vw;
+}
+
+.book-card {
+    background: white;
+    border-radius: 0.5vw;
+    overflow: hidden;
+    box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.book-card:hover {
+    transform: translateY(-0.5vw);
+}
+
+.book-card img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+}
+
+.book-info {
+    padding: 1vw;
+}
+
+.book-info h3 {
+    font-size: 1vw;
+    margin-bottom: 0.5vw;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.book-info .rating {
+    color: #ffd700;
+    font-size: 0.9vw;
+}
+
+.loading-message,
+.error-message {
+    text-align: center;
+    padding: 2vw;
+    font-size: 1.2vw;
+    color: #666;
+}
+
+.error-message {
+    color: #dc3545;
+    background-color: #ffe0e0;
+    border-radius: 0.5vw;
+    margin: 1vw 0;
+}
