@@ -43,8 +43,8 @@ function HomePage() {
         navigate(`/book/${bookId}`);
     };
 
-    const handleCategoryClick = (categoryName) => {
-        navigate(`/category/${categoryName.toLowerCase()}`);
+    const handleCategoryClick = (categoryId) => {
+        navigate(`/category/${categoryId}`);
     };
 
     return (
@@ -105,7 +105,7 @@ function HomePage() {
                                 <div
                                     key={category.id}
                                     className="category-card"
-                                    onClick={() => handleCategoryClick(category.name)}
+                                    onClick={() => handleCategoryClick(category.id)}
                                 >
                                     <h3>{category.name}</h3>
                                     <p>{category.book_count} Books</p>

@@ -346,7 +346,7 @@ function BookPage() {
                         </div>
                     </div>
                 </div>
-                {comments.length > 0 && (
+                { (
                     <div className='bookpage-comments-section'>
                         <h2>Comments</h2>
                         <form onSubmit={handleCommentSubmit} className="comment-form">
@@ -364,7 +364,7 @@ function BookPage() {
                                 {submitLoading ? 'Posting...' : 'Post Comment'}
                             </button>
                         </form>
-                        <div className="comments-list">
+                        {comments.length > 0 &&<div className="comments-list">
                             {comments.map((comment) => (
                                 <div className="comment-card" key={comment.id}>
                                     <div className="comment-header">
@@ -373,7 +373,7 @@ function BookPage() {
                                     <p className="comment-content">{comment.content}</p>
                                 </div>
                             ))}
-                        </div>
+                        </div>}
                     </div>
                 )}
                 <div className='bookpage-comments'>
