@@ -13,11 +13,16 @@ function CategoryPage() {
     const [error, setError] = useState("");
     const [categoryName, setCategoryName] = useState("");
 
+    // Pagination States
+    const [bookPage, setBookPage] = useState(1);
+    const itemsPerPage = 10;
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
                 setError("");
+                setBookPage(1); // Reset to first page when category changes
 
                 if (categoryId === 'all') {
                     const response = await axios.get('/api/get-categories/');
@@ -48,6 +53,24 @@ function CategoryPage() {
         navigate(`/book/${bookId}`);
     };
 
+    // Pagination Handlers
+    const totalPages = Math.ceil(books.length / itemsPerPage);
+
+    const handlePreviousPage = () => {
+        setBookPage(prev => Math.max(prev - 1, 1));
+    };
+
+    const handleNextPage = () => {
+        setBookPage(prev => Math.min(prev + 1, totalPages));
+    };
+
+    const handlePageSelect = (e) => {
+        setBookPage(Number(e.target.value));
+    };
+
+    // Sliced Books for Current Page
+    const paginatedBooks = books.slice((bookPage - 1) * itemsPerPage, bookPage * itemsPerPage);
+
     return (
         <div>
             <HeaderComponent />
@@ -74,25 +97,59 @@ function CategoryPage() {
                         </div>
                     </div>
                 ) : (
-                    // Single Category View
+                    // Single Category View with Pagination
                     <div className="single-category">
                         <h1 className="category-title">{categoryName}</h1>
-                        <div className="books-grid">
-                            {books.map((book) => (
-                                <div
-                                    key={book.id}
-                                    className="book-card"
-                                    onClick={() => handleBookClick(book.id)}
-                                >
-                                    <img src={book.cover} alt={book.title} />
-                                    <div className="book-info">
-                                        <h3>{book.title}</h3>
-                                        <p>{book.author.name}</p>
-                                        <div className="rating">★ {book.average_rating}</div>
-                                    </div>
+                        {books.length > 0 ? (
+                            <>
+                                <div className="books-grid">
+                                    {paginatedBooks.map((book) => (
+                                        <div
+                                            key={book.id}
+                                            className="book-card"
+                                            onClick={() => handleBookClick(book.id)}
+                                        >
+                                            <img src={book.cover} alt={book.title} />
+                                            <div className="book-info">
+                                                <h3>{book.title}</h3>
+                                                <p>{book.author.name}</p>
+                                                <div className="rating">★ {book.average_rating}</div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
+                                {/* Pagination Controls */}
+                                <div className="pagination-controls">
+                                    <button
+                                        className="page-button"
+                                        disabled={bookPage === 1}
+                                        onClick={handlePreviousPage}
+                                    >
+                                        Previous
+                                    </button>
+                                    <select
+                                        className="page-select"
+                                        value={bookPage}
+                                        onChange={handlePageSelect}
+                                    >
+                                        {[...Array(totalPages)].map((_, i) => (
+                                            <option key={i + 1} value={i + 1}>
+                                                Page {i + 1}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <button
+                                        className="page-button"
+                                        disabled={bookPage >= totalPages}
+                                        onClick={handleNextPage}
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            <p className="no-results">No books found in "{categoryName}"</p>
+                        )}
                     </div>
                 )}
             </div>
