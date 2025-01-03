@@ -28,15 +28,12 @@ function SearchPage() {
         setLoading(true);
         setError("");
         try {
-            const response = await axios.get(`/api/get-book/?s=${encodeURIComponent(keyword)}&limit=20`);
-            const allResults = response.data.data;
+            const book_response = await axios.get(`/api/get-book/?s=${encodeURIComponent(keyword)}&limit=20`);
+            const author_response = await axios.get(`/api/get-author/?s=${encodeURIComponent(keyword)}&limit=20`);
+            const bookResults = book_response.data.data;
+            const authorResults = author_response.data.data;
 
-            const bookResults = allResults.filter(item =>
-                item.title.toLowerCase().includes(keyword.toLowerCase())
-            );
-            const authorResults = allResults.filter(item =>
-                item.author.name.toLowerCase().includes(keyword.toLowerCase())
-            );
+           
 
             setBooks(bookResults);
             setAuthors(authorResults);
@@ -50,6 +47,11 @@ function SearchPage() {
     const handleBookClick = (bookId) => {
         navigate(`/book/${bookId}`);
     };
+    
+    const handleAuthorClick = (authorId) => {
+        navigate(`/author/${authorId}`);
+    };
+
 
     return (
         <div>
@@ -153,18 +155,18 @@ function SearchPage() {
                                     <div className="books-grid">
                                         {authors
                                             .slice((authorPage - 1) * itemsPerPage, authorPage * itemsPerPage)
-                                            .map((book) => (
+                                            .map((author) => (
                                                 <div
-                                                    key={book.id}
-                                                    className="book-card"
-                                                    onClick={() => handleBookClick(book.id)}
+                                                    key={author.id}
+                                                    className="author-card"
+                                                    onClick={() => handleAuthorClick(author.id)}
                                                 >
-                                                    <img src={book.cover} alt={book.title} />
-                                                    <div className="book-info">
-                                                        <span className="book-category">{book.category.name}</span>
-                                                        <h4 className="book-title">{book.title}</h4>
-                                                        <span className="book-author">{book.author.name}</span>
-                                                    </div>
+                                                    
+                                                    
+                                                        
+                                                        <h3 className="author-title">{author.name}</h3>
+                                                        
+                                                    
                                                 </div>
                                             ))}
                                     </div>
