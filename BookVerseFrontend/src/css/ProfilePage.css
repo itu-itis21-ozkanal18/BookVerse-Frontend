@@ -198,3 +198,34 @@
     border-radius: 0.8vw;
     margin: 1vw 0;
 }
+
+.admin-panel-section {
+    margin-top: 2vw;
+    display: flex;
+    justify-content: center;
+}
+
+.admin-panel-button {
+    padding: 1vw 3vw;
+    font-size: 1.1vw;
+    border: none;
+    border-radius: 2vw;
+    cursor: pointer;
+    background-color: #ff6b35;
+    color: white;
+    transition: all 0.3s ease;
+    font-family: var(--text-font);
+    font-weight: 500;
+    min-width: 12vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5vw;
+    box-shadow: 0 0.2vw 0.4vw rgba(255, 107, 53, 0.3);
+}
+
+.admin-panel-button:hover {
+    background-color: #ff8a5c;
+    transform: translateY(-0.2vw);
+    box-shadow: 0 0.4vw 0.8vw rgba(255, 107, 53, 0.4);
+}

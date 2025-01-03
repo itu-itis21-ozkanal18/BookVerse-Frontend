@@ -142,6 +142,16 @@ function ProfilePage() {
                                 </div>
                             )}
                         </div>
+                        {userData.is_superuser && (
+                            <div className="admin-panel-section">
+                                <button
+                                    className="admin-panel-button"
+                                    onClick={() => navigate('/admin/books')}
+                                >
+                                    Go to Admin Panel
+                                </button>
+                            </div>
+                        )}
                     </>
                 )}
             </div>

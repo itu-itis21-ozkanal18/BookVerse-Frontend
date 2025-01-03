@@ -1,0 +1,423 @@
+/* src/css/AdminComponents.css */
+
+.admin-container {
+    padding: 2vw;
+    background-color: var(--background-color);
+    font-family: var(--text-font);
+}
+
+/* Common Elements */
+.admin-container h1 {
+    font-size: 2vw;
+    margin-bottom: 2vw;
+    font-family: var(--title-font);
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.admin-loading {
+    text-align: center;
+    padding: 2vw;
+    font-size: 1.2vw;
+    color: #666;
+    font-family: var(--text-font);
+}
+
+.admin-error {
+    text-align: center;
+    padding: 2vw;
+    font-size: 1.2vw;
+    color: #dc3545;
+    background-color: #ffe0e0;
+    border-radius: 0.5vw;
+    margin: 1vw 0;
+    font-family: var(--text-font);
+}
+
+/* Table Styles */
+.admin-table-container {
+    background-color: white;
+    border-radius: 0.5vw;
+    box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 2vw;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    background-color: #eefcfb;
+    padding: 1vw;
+    text-align: left;
+    font-size: 1vw;
+    font-weight: 600;
+    color: #2c3e50;
+    border-bottom: 1px solid #e0f5f4;
+    font-family: var(--title-font);
+}
+
+.admin-table td {
+    padding: 1vw;
+    font-size: 0.9vw;
+    border-bottom: 1px solid #e0f5f4;
+    font-family: var(--text-font);
+}
+
+.admin-table tbody tr:hover {
+    background-color: #f8fdfd;
+}
+
+/* Form Styles */
+.admin-form {
+    background-color: white;
+    padding: 1.5vw;
+    border-radius: 0.5vw;
+    box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.1);
+    margin-bottom: 2vw;
+}
+
+.admin-form label {
+    display: block;
+    margin-bottom: 0.5vw;
+    font-family: var(--title-font);
+    font-size: 1vw;
+    color: #2c3e50;
+}
+
+.admin-input,
+.admin-textarea {
+    width: 100%;
+    padding: 0.6vw;
+    margin-bottom: 1vw;
+    border: 1px solid #e0f5f4;
+    border-radius: 0.25vw;
+    font-size: 0.9vw;
+    font-family: var(--text-font);
+    transition: all 0.3s ease;
+}
+
+.admin-textarea {
+    min-height: 4vw;
+    max-height: 12vw;
+    resize: vertical;
+}
+
+.admin-input:focus,
+.admin-textarea:focus {
+    outline: none;
+    border-color: #2c3e50;
+    box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.1);
+}
+
+/* Button Styles */
+.admin-form-buttons {
+    display: flex;
+    gap: 1vw;
+    margin-top: 1vw;
+}
+
+.admin-submit-button,
+.admin-cancel-button,
+.admin-action-button {
+    padding: 0.5vw 1.5vw;
+    border: none;
+    border-radius: 0.25vw;
+    font-size: 0.9vw;
+    font-family: var(--text-font);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.admin-submit-button {
+    background-color: #2c3e50;
+    color: white;
+}
+
+.admin-submit-button:hover {
+    background-color: #34495e;
+    transform: translateY(-1px);
+}
+
+.admin-cancel-button {
+    background-color: #95a5a6;
+    color: white;
+}
+
+.admin-cancel-button:hover {
+    background-color: #7f8c8d;
+    transform: translateY(-1px);
+}
+
+.admin-action-button {
+    padding: 0.4vw 0.8vw;
+    font-size: 0.8vw;
+}
+
+.admin-edit-button {
+    background-color: #27ae60;
+    color: white;
+    margin-right: 0.5vw;
+}
+
+.admin-edit-button:hover {
+    background-color: #219a52;
+    transform: translateY(-1px);
+}
+
+.admin-delete-button {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.admin-delete-button:hover {
+    background-color: #c0392b;
+    transform: translateY(-1px);
+}
+
+/* Filter Styles */
+.admin-filters {
+    display: flex;
+    gap: 1vw;
+    margin-bottom: 2vw;
+    flex-wrap: wrap;
+}
+
+.admin-filter-input {
+    padding: 0.5vw 1vw;
+    border: 1px solid #e0f5f4;
+    border-radius: 0.25vw;
+    font-size: 0.9vw;
+    font-family: var(--text-font);
+    flex: 1;
+    min-width: 200px;
+    transition: all 0.3s ease;
+}
+
+.admin-filter-input:focus {
+    outline: none;
+    border-color: #2c3e50;
+    box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.1);
+}
+
+/* Pagination Styles */
+.admin-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1vw;
+    background-color: white;
+    border-radius: 0.5vw;
+    box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.1);
+}
+
+.admin-pagination button {
+    padding: 0.5vw 1.5vw;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 0.25vw;
+    cursor: pointer;
+    font-size: 0.9vw;
+    font-family: var(--text-font);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.admin-pagination button:hover:not(:disabled) {
+    background-color: #34495e;
+    transform: translateY(-1px);
+}
+
+.admin-pagination button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+.admin-pagination-info {
+    font-size: 0.9vw;
+    color: #2c3e50;
+    font-family: var(--text-font);
+}
+
+/* No Data Message */
+.admin-no-data {
+    text-align: center;
+    padding: 2vw;
+    font-size: 1.2vw;
+    color: #7f8c8d;
+    font-family: var(--text-font);
+}
+
+.status-active {
+    color: #10b981;
+    background-color: #ecfdf5;
+    padding: 0.25vw 0.75vw;
+    border-radius: 9999px;
+    font-size: 0.8vw;
+    font-weight: 500;
+}
+
+.status-inactive {
+    color: #ef4444;
+    background-color: #fef2f2;
+    padding: 0.25vw 0.75vw;
+    border-radius: 9999px;
+    font-size: 0.8vw;
+    font-weight: 500;
+}
+
+/* Add to src/css/AdminComponents.css */
+
+.admin-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.admin-modal::-webkit-scrollbar {
+    width: 8px;
+}
+
+.admin-modal::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.admin-modal::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.admin-modal::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.admin-modal {
+    background-color: white;
+    padding: 2vw;
+    border-radius: 0.5vw;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 0.2vw 1vw rgba(0, 0, 0, 0.1);
+}
+
+.admin-modal h2 {
+    font-family: var(--title-font);
+    font-size: 1.5vw;
+    margin-bottom: 1.5vw;
+    color: #2c3e50;
+}
+
+.form-group {
+    margin-bottom: 0.8vw;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5vw;
+    font-family: var(--text-font);
+    font-size: 0.9vw;
+    color: #2c3e50;
+}
+
+.form-group-checkbox {
+    margin-bottom: 1vw;
+}
+
+.form-group-checkbox label {
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+    font-family: var(--text-font);
+    font-size: 0.9vw;
+    color: #2c3e50;
+    cursor: pointer;
+}
+
+.form-group-checkbox input[type="checkbox"] {
+    width: 1vw;
+    height: 1vw;
+    cursor: pointer;
+}
+
+/* Make table rows clickable */
+.admin-table tbody tr {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.admin-table tbody tr:hover {
+    background-color: var(--background-color);
+}
+
+/* Add to src/css/AdminComponents.css */
+
+.admin-table-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.admin-table-row:hover {
+    background-color: var(--background-color);
+}
+
+/* Prevent text selection when clicking rows */
+.admin-table-row td {
+    user-select: none;
+}
+
+/* Make sure buttons stay clickable and visible */
+.admin-table-row .admin-edit-button,
+.admin-table-row .admin-delete-button {
+    position: relative;
+    z-index: 1;
+}
+
+/* Add to AdminComponents.css */
+
+.admin-add-button {
+    margin-bottom: 1.5vw;
+    padding: 0.5vw 1vw;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 0.25vw;
+    cursor: pointer;
+    font-family: var(--text-font);
+    font-size: 0.9vw;
+    transition: background-color 0.2s ease;
+}
+
+.admin-add-button:hover {
+    background-color: #34495e;
+}
+
+.admin-select {
+    width: 100%;
+    padding: 0.8vw;
+    border: 1px solid #e0f5f4;
+    border-radius: 0.25vw;
+    font-size: 0.9vw;
+    font-family: var(--text-font);
+    background-color: white;
+}
+
+.admin-select:focus {
+    outline: none;
+    border-color: #2c3e50;
+    box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.1);
+}
