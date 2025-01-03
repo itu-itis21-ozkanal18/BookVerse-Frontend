@@ -90,7 +90,7 @@ function BookPage() {
             try {
                 const response = await axios.get("/api/get-book/?book_id=" + bookId);
                 setBookData(response.data.data[0]);
-                setRate(response.data.data[0].average_rating);
+                setRate(response.data.data[0].average_rating.toFixed(2));
             } catch (error) {
                 console.error("Error fetching books:", error);
             }

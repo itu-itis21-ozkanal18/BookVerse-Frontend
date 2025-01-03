@@ -12,6 +12,7 @@ function HomePage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const token = localStorage.getItem("AT");
 
     useEffect(() => {
         const fetchHomePageData = async () => {
@@ -20,7 +21,10 @@ function HomePage() {
                 const [featuredResponse, newReleasesResponse, popularResponse, categoriesResponse] = await Promise.all([
                     axios.get('/api/get-book/?featured=true&limit=5'),
                     axios.get('/api/get-book/?sort=newest&limit=10'),
-                    axios.get('/api/get-book/?sort=popular&limit=10'),
+                    token!=null?
+                        axios.get('/api/recommended-books/',{
+                            headers: { Authorization: `Bearer ${token}` }
+                        }):axios.get('/api/get-book/?featured=true&limit=10'),
                     axios.get('/api/get-categories/')
                 ]);
 
