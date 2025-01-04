@@ -5,6 +5,8 @@ import '../css/AdminComponents.css';
 
 const AdminBooksPage = () => {
     const [books, setBooks] = useState([]);
+    const [authors, setAuthors] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -13,8 +15,8 @@ const AdminBooksPage = () => {
         title: '',
         summary: '',
         page_count: '',
-        author_name: '',
-        category_name: '',
+        author: '',
+        category: '',
         cover: null
     });
 
@@ -24,18 +26,43 @@ const AdminBooksPage = () => {
         { key: 'id', label: 'ID' },
         { key: 'title', label: 'Title' },
         { key: 'page_count', label: 'Pages' },
-        { key: 'author_name', label: 'Author' },
-        { key: 'category_name', label: 'Category' }
+        {
+            key: 'author',
+            label: 'Author',
+            render: (book) => {
+                const author = authors.find(a => a.id === book.author);
+                return author ? author.name : 'Unknown';
+            }
+        },
+        {
+            key: 'category',
+            label: 'Category',
+            render: (book) => {
+                const category = categories.find(c => c.id === book.category);
+                return category ? category.name : 'Unknown';
+            }
+        }
     ];
 
     useEffect(() => {
-        const fetchBooks = async () => {
+        const fetchData = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get('/api/api/admin/books/', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setBooks(response.data || []);
+                const [booksRes, authorsRes, categoriesRes] = await Promise.all([
+                    axios.get('/api/api/admin/books/', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }),
+                    axios.get('/api/api/admin/authors/', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }),
+                    axios.get('/api/api/admin/categories/', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    })
+                ]);
+
+                setBooks(booksRes.data || []);
+                setAuthors(authorsRes.data || []);
+                setCategories(categoriesRes.data || []);
                 setError(null);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -45,8 +72,10 @@ const AdminBooksPage = () => {
             }
         };
 
-        fetchBooks();
+        fetchData();
     }, [token]);
+
+
 
     const handleEditClick = async (bookId) => {
         try {
@@ -59,8 +88,8 @@ const AdminBooksPage = () => {
                 title: bookData.title,
                 summary: bookData.summary,
                 page_count: bookData.page_count,
-                author_name: bookData.author_name,
-                category_name: bookData.category_name,
+                author: bookData.author,
+                category: bookData.category,
                 cover: null
             });
             setShowModal(true);
@@ -76,8 +105,8 @@ const AdminBooksPage = () => {
         formData.append('title', bookForm.title);
         formData.append('summary', bookForm.summary);
         formData.append('page_count', bookForm.page_count);
-        formData.append('author_name', bookForm.author_name);
-        formData.append('category_name', bookForm.category_name);
+        formData.append('author', bookForm.author);
+        formData.append('category', bookForm.category);
         if (bookForm.cover instanceof File) {
             formData.append('cover', bookForm.cover);
         }
@@ -95,9 +124,6 @@ const AdminBooksPage = () => {
                         }
                     }
                 );
-                setBooks(books.map(book =>
-                    book.id === editingBook.id ? response.data : book
-                ));
             } else {
                 response = await axios.post(
                     '/api/api/admin/books/',
@@ -109,7 +135,6 @@ const AdminBooksPage = () => {
                         }
                     }
                 );
-                setBooks([...books, response.data]);
             }
             setShowModal(false);
             setEditingBook(null);
@@ -117,20 +142,17 @@ const AdminBooksPage = () => {
                 title: '',
                 summary: '',
                 page_count: '',
-                author_name: '',
-                category_name: '',
+                author: '',
+                category: '',
                 cover: null
             });
+            window.location.reload();
         } catch (error) {
             setError(error.response?.data?.detail || "Failed to save book");
         }
     };
 
     const handleDeleteBook = async (bookId) => {
-        if (!window.confirm('Are you sure you want to delete this book?')) {
-            return;
-        }
-
         try {
             await axios.delete(`/api/api/admin/books/${bookId}/`, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -142,43 +164,55 @@ const AdminBooksPage = () => {
     };
 
     const handleFileChange = (e) => {
-        setBookForm({
-            ...bookForm,
-            cover: e.target.files[0]
-        });
+        const file = e.target.files[0];
+        if (file) {
+            const fileType = file.type.toLowerCase();
+            if (!fileType.includes('jpeg') && !fileType.includes('jpg')) {
+                alert('Please upload only JPG/JPEG images');
+                e.target.value = '';
+                return;
+            }
+            setBookForm({
+                ...bookForm,
+                cover: file
+            });
+        }
     };
 
     if (loading) return <div className="admin-loading">Loading...</div>;
     if (error) return <div className="admin-error">Error: {error}</div>;
 
     return (
-        <div className="admin-container">
-            <h1>Books Management</h1>
+        <>
+            <div className="admin-header">
+                <h1>Books Management</h1>
+                <button
+                    onClick={() => {
+                        setEditingBook(null);
+                        setBookForm({
+                            title: '',
+                            summary: '',
+                            page_count: '',
+                            author: '',
+                            category: '',
+                            cover: null
+                        });
+                        setShowModal(true);
+                    }}
+                    className="admin-add-button"
+                >
+                    Add New Book
+                </button>
+            </div>
 
-            <button
-                onClick={() => {
-                    setEditingBook(null);
-                    setBookForm({
-                        title: '',
-                        summary: '',
-                        page_count: '',
-                        author_name: '',
-                        category_name: '',
-                        cover: null
-                    });
-                    setShowModal(true);
-                }}
-                className="admin-add-button"
-            >
-                Add New Book
-            </button>
-
-            <AdminTable
-                columns={columns}
-                data={books}
-                onDelete={handleDeleteBook}
-                onRowClick={handleEditClick}
-            />
+            <div className="admin-table-section">
+                <AdminTable
+                    columns={columns}
+                    data={books}
+                    onDelete={handleDeleteBook}
+                    onRowClick={handleEditClick}
+                />
+            </div>
 
             {showModal && (
                 <div className="admin-modal-overlay">
@@ -193,6 +227,7 @@ const AdminBooksPage = () => {
                                     onChange={e => setBookForm({ ...bookForm, title: e.target.value })}
                                     className="admin-input"
                                     required
+                                    placeholder="Enter book title"
                                 />
                             </div>
 
@@ -202,6 +237,7 @@ const AdminBooksPage = () => {
                                     value={bookForm.summary}
                                     onChange={e => setBookForm({ ...bookForm, summary: e.target.value })}
                                     className="admin-textarea"
+                                    placeholder="Enter book summary"
                                 />
                             </div>
 
@@ -213,31 +249,43 @@ const AdminBooksPage = () => {
                                     onChange={e => setBookForm({ ...bookForm, page_count: e.target.value })}
                                     className="admin-input"
                                     required
+                                    placeholder="Enter page count"
+                                    min="1"
                                 />
                             </div>
 
                             <div className="form-group">
-                                <label>Author Name:</label>
-                                <input
-                                    type="text"
-                                    value={bookForm.author_name}
-                                    onChange={e => setBookForm({ ...bookForm, author_name: e.target.value })}
-                                    className="admin-input"
-                                    placeholder="Enter author name"
+                                <label>Author:</label>
+                                <select
+                                    value={bookForm.author}
+                                    onChange={e => setBookForm({ ...bookForm, author: e.target.value })}
+                                    className="admin-select"
                                     required
-                                />
+                                >
+                                    <option value="">Select Author</option>
+                                    {authors.map(author => (
+                                        <option key={author.id} value={author.id}>
+                                            {author.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
 
                             <div className="form-group">
                                 <label>Category:</label>
-                                <input
-                                    type="text"
-                                    value={bookForm.category_name}
-                                    onChange={e => setBookForm({ ...bookForm, category_name: e.target.value })}
-                                    className="admin-input"
-                                    placeholder="Enter category name"
+                                <select
+                                    value={bookForm.category}
+                                    onChange={e => setBookForm({ ...bookForm, category: e.target.value })}
+                                    className="admin-select"
                                     required
-                                />
+                                >
+                                    <option value="">Select Category</option>
+                                    {categories.map(category => (
+                                        <option key={category.id} value={category.id}>
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
 
                             <div className="form-group">
@@ -246,8 +294,9 @@ const AdminBooksPage = () => {
                                     type="file"
                                     onChange={handleFileChange}
                                     className="admin-input"
-                                    accept="image/*"
+                                    accept=".jpg,.jpeg"
                                 />
+                                <small className="file-hint">Only JPG/JPEG files are allowed</small>
                             </div>
 
                             <div className="admin-form-buttons">
@@ -269,7 +318,7 @@ const AdminBooksPage = () => {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 };
 

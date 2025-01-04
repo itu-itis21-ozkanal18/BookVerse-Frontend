@@ -1,4 +1,77 @@
-/* src/css/AdminComponents.css */
+.admin-dashboard {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.admin-sidebar {
+    width: 250px;
+    background-color: #2c3e50;
+    padding: 2vw;
+    color: white;
+}
+
+.admin-sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.admin-sidebar nav ul li {
+    margin-bottom: 1vw;
+}
+
+.admin-sidebar nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1vw;
+    display: block;
+    padding: 0.8vw 1vw;
+    border-radius: 0.4vw;
+    transition: background-color 0.3s ease;
+}
+
+.admin-sidebar nav ul li a:hover {
+    background-color: #34495e;
+}
+
+.admin-content {
+    flex: 1;
+    padding: 2vw;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2vw;
+    width: 100%;
+}
+
+.admin-header h1 {
+    margin-bottom: 0;
+    /* Override previous margin */
+}
+
+.admin-add-button {
+    padding: 0.8vw 1.5vw;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 0.25vw;
+    cursor: pointer;
+    font-family: var(--text-font);
+    font-size: 0.9vw;
+    transition: all 0.3s ease;
+    width: auto;
+    /* Override any previous width */
+    white-space: nowrap;
+    /* Prevent text wrapping */
+}
+
+.admin-add-button:hover {
+    background-color: #34495e;
+    transform: translateY(-1px);
+}
 
 .admin-container {
     padding: 2vw;
@@ -41,6 +114,11 @@
     box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.1);
     overflow: hidden;
     margin-bottom: 2vw;
+}
+
+.admin-table-section {
+    width: 100%;
+    /* Make sure table section spans full width */
 }
 
 .admin-table {
@@ -390,20 +468,26 @@
 /* Add to AdminComponents.css */
 
 .admin-add-button {
-    margin-bottom: 1.5vw;
-    padding: 0.5vw 1vw;
+    padding: 0.8vw 1.5vw;
     background-color: #2c3e50;
     color: white;
     border: none;
     border-radius: 0.25vw;
     cursor: pointer;
-    font-family: var(--text-font);
     font-size: 0.9vw;
-    transition: background-color 0.2s ease;
+    min-width: auto;
+    white-space: nowrap;
 }
 
 .admin-add-button:hover {
     background-color: #34495e;
+}
+
+.file-hint {
+    display: block;
+    color: #666;
+    font-size: 0.8vw;
+    margin-top: 0.3vw;
 }
 
 .admin-select {

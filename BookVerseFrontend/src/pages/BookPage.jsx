@@ -12,23 +12,16 @@ function BookPage() {
     const token = localStorage.getItem("AT");
 
     const navigate = useNavigate();
-
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
     const [bookData, setBookData] = useState(null);
-
     const { bookId } = useParams();
-
     const [rate, setRate] = useState(0);
-
     const [tempRate, setTempRate] = useState(0);
-
     const [defaultRate, setDefaultRate] = useState(0);
-
     const [comments, setComments] = useState([]);
-
     const [newComment, setNewComment] = useState("");
-
     const [submitLoading, setSubmitLoading] = useState(false);
-
     const [actionStates, setActionStates] = useState({
         favorite: {
             active: false,
@@ -90,7 +83,7 @@ function BookPage() {
             try {
                 const response = await axios.get("/api/get-book/?book_id=" + bookId);
                 setBookData(response.data.data[0]);
-                setRate(response.data.data[0].average_rating.toFixed(2));
+                setRate(response.data.data[0].average_rating.toFixed(1));
             } catch (error) {
                 console.error("Error fetching books:", error);
             }
@@ -121,7 +114,8 @@ function BookPage() {
     const handleFavoriteToggle = async () => {
         try {
             if (!token) {
-                navigate('/login');
+                setAlertMessage('Please login to add to favorites');
+                setShowAlert(true);
                 return;
             }
 
@@ -159,7 +153,8 @@ function BookPage() {
     const handleReadlistToggle = async () => {
         try {
             if (!token) {
-                navigate('/login');
+                setAlertMessage('Please login to add to reading list');
+                setShowAlert(true);
                 return;
             }
 
@@ -197,31 +192,58 @@ function BookPage() {
     const handleRate = async (rate) => {
         try {
             if (!token) {
-                navigate('/login');
+                setAlertMessage('Please login to rate this book');
+                setShowAlert(true);
                 return;
             }
 
-            const response = await axios.post("/api/add-rating/",
-                {
-                    book_id: bookData.id,
-                    rating: rate
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
+            try {
+                const response = await axios.post("/api/add-rating/",
+                    {
+                        book_id: bookData.id,
+                        rating: rate
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
                     }
-                }
-            );
+                );
 
-            if (response.status === 200) {
-                setDefaultRate(rate);
-                setTempRate(rate);
-                console.log("Book rated successfully");
+                if (response.status === 200) {
+                    setDefaultRate(rate);
+                    setTempRate(rate);
+                    window.location.reload();
+                }
+            } catch (error) {
+                if (error.response?.status === 400) {
+                    const putResponse = await axios.put("/api/add-rating/",
+                        {
+                            book_id: bookData.id,
+                            rating: rate
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`
+                            }
+                        }
+                    );
+
+                    if (putResponse.status === 200) {
+                        setDefaultRate(rate);
+                        setTempRate(rate);
+                        window.location.reload();
+                    }
+                } else {
+                    throw error;
+                }
             }
         } catch (error) {
             console.error("Error rating book:", error);
+            setAlertMessage('Failed to rate book. Please try again.');
+            setShowAlert(true);
         }
-    }
+    };
 
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
@@ -229,7 +251,8 @@ function BookPage() {
 
         try {
             if (!token) {
-                navigate('/login');
+                setAlertMessage('Please login to comment');
+                setShowAlert(true);
                 return;
             }
 
@@ -346,7 +369,7 @@ function BookPage() {
                         </div>
                     </div>
                 </div>
-                { (
+                {(
                     <div className='bookpage-comments-section'>
                         <h2>Comments</h2>
                         <form onSubmit={handleCommentSubmit} className="comment-form">
@@ -364,11 +387,14 @@ function BookPage() {
                                 {submitLoading ? 'Posting...' : 'Post Comment'}
                             </button>
                         </form>
-                        {comments.length > 0 &&<div className="comments-list">
+                        {comments.length > 0 && <div className="comments-list">
                             {comments.map((comment) => (
                                 <div className="comment-card" key={comment.id}>
                                     <div className="comment-header">
                                         <span className="comment-author">{comment.user.username}</span>
+                                        <span className="comment-date">
+                                            {new Date(comment.date).toLocaleString()}
+                                        </span>
                                     </div>
                                     <p className="comment-content">{comment.content}</p>
                                 </div>
@@ -380,7 +406,17 @@ function BookPage() {
 
                 </div>
             </div>
-
+            {showAlert && (
+                <div className="alert-overlay">
+                    <p className="alert-message">{alertMessage}</p>
+                    <button
+                        className="alert-button"
+                        onClick={() => setShowAlert(false)}
+                    >
+                        OK
+                    </button>
+                </div>
+            )}
         </div>
     )
 }

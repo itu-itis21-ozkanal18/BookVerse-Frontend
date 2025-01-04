@@ -62,7 +62,7 @@ function AuthorPage() {
                                 </div>
                                 <div className="stat-item">
                                     <span className="stat-number">
-                                        {books.reduce((acc, book) => acc + book.average_rating, 0) / books.length || 0}
+                                        {(books.reduce((acc, book) => acc + book.average_rating, 0) / books.length || 0).toFixed(1)}
                                     </span>
                                     <span className="stat-label">Avg Rating</span>
                                 </div>
@@ -81,7 +81,7 @@ function AuthorPage() {
                                         <img src={book.cover} alt={book.title} />
                                         <div className="book-info">
                                             <h3>{book.title}</h3>
-                                            <div className="rating">★ {book.average_rating}</div>
+                                            <div className="rating">★ {book.average_rating.toFixed(1)}</div>
                                         </div>
                                     </div>
                                 ))}

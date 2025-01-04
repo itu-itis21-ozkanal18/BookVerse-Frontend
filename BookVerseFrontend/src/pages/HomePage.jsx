@@ -21,10 +21,10 @@ function HomePage() {
                 const [featuredResponse, newReleasesResponse, popularResponse, categoriesResponse] = await Promise.all([
                     axios.get('/api/get-book/?featured=true&limit=5'),
                     axios.get('/api/get-book/?sort=newest&limit=10'),
-                    token!=null?
-                        axios.get('/api/recommended-books/',{
+                    token != null ?
+                        axios.get('/api/recommended-books/', {
                             headers: { Authorization: `Bearer ${token}` }
-                        }):axios.get('/api/get-book/?featured=true&limit=10'),
+                        }) : axios.get('/api/get-book/?featured=true&limit=10'),
                     axios.get('/api/get-categories/')
                 ]);
 
@@ -41,7 +41,7 @@ function HomePage() {
         };
 
         fetchHomePageData();
-    }, []);
+    }, [token]);
 
     const handleBookClick = (bookId) => {
         navigate(`/book/${bookId}`);
@@ -69,20 +69,38 @@ function HomePage() {
                 <>
                     {/* Hero Section */}
                     <section className="hero-section">
-                        <div className="hero-content">
-                            <h1>Welcome to BookVerse</h1>
-                            <p>Your gateway to endless stories and knowledge</p>
-                            {!localStorage.getItem('AT') && (
-                                <button onClick={() => navigate('/login')} className="cta-button">
-                                    Join Now
-                                </button>
-                            )}
+                        <div className="hero-flex-container">
+                            <div className="hero-content">
+                                <h1>Welcome to BookVerse</h1>
+                                <p>Your gateway to endless stories and knowledge</p>
+                                {!localStorage.getItem('AT') && (
+                                    <button onClick={() => navigate('/login')} className="cta-button">
+                                        Join Now
+                                    </button>
+                                )}
+                            </div>
+                            <div className="hero-slider">
+                                {featuredBooks.slice(0, 3).map((book, index) => (
+                                    <div
+                                        key={book.id}
+                                        className="hero-slide"
+                                        onClick={() => handleBookClick(book.id)}
+                                    >
+                                        <img src={book.cover} alt={book.title} />
+                                        <div className="hero-slide-info">
+                                            <h3>{book.title}</h3>
+                                            <p>{book.author.name}</p>
+                                            <div className="rating">★ {book.average_rating.toFixed(1)}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </section>
 
                     {/* Featured Books Section */}
                     <section className="featured-section">
-                        <h2>Featured Books</h2>
+                        <h2>Popular Books</h2>
                         <div className="books-carousel">
                             {featuredBooks.slice(0, 5).map(book => (
                                 <div
@@ -94,7 +112,7 @@ function HomePage() {
                                     <div className="book-info">
                                         <h3>{book.title}</h3>
                                         <p>{book.author.name}</p>
-                                        <div className="rating">★ {book.average_rating}</div>
+                                        <div className="rating">★ {book.average_rating.toFixed(1)}</div>
                                     </div>
                                 </div>
                             ))}
@@ -103,18 +121,29 @@ function HomePage() {
 
                     {/* Categories Section */}
                     <section className="categories-section">
-                        <h2>Explore Categories</h2>
+                        <div className="categories-header">
+                            <h2>Explore Categories</h2>
+                            <button
+                                className="view-all-button"
+                                onClick={() => navigate('/category/all')}
+                            >
+                                View All
+                            </button>
+                        </div>
                         <div className="categories-grid">
-                            {categories.map(category => (
-                                <div
-                                    key={category.id}
-                                    className="category-card"
-                                    onClick={() => handleCategoryClick(category.id)}
-                                >
-                                    <h3>{category.name}</h3>
-                                    <p>{category.book_count} Books</p>
-                                </div>
-                            ))}
+                            {categories
+                                .sort((a, b) => b.book_count - a.book_count)
+                                .slice(0, 8)
+                                .map(category => (
+                                    <div
+                                        key={category.id}
+                                        className="category-card"
+                                        onClick={() => handleCategoryClick(category.id)}
+                                    >
+                                        <h3>{category.name}</h3>
+                                        <p>{category.book_count} Books</p>
+                                    </div>
+                                ))}
                         </div>
                     </section>
 
@@ -132,7 +161,7 @@ function HomePage() {
                                     <div className="book-info">
                                         <h3>{book.title}</h3>
                                         <p>{book.author.name}</p>
-                                        <div className="rating">★ {book.average_rating}</div>
+                                        <div className="rating">★ {book.average_rating.toFixed(1)}</div>
                                     </div>
                                 </div>
                             ))}
@@ -140,25 +169,27 @@ function HomePage() {
                     </section>
 
                     {/* Popular Books Section */}
-                    <section className="popular-section">
-                        <h2>Popular Now</h2>
-                        <div className="books-grid">
-                            {popularBooks.map(book => (
-                                <div
-                                    key={book.id}
-                                    className="book-card"
-                                    onClick={() => handleBookClick(book.id)}
-                                >
-                                    <img src={book.cover} alt={book.title} />
-                                    <div className="book-info">
-                                        <h3>{book.title}</h3>
-                                        <p>{book.author.name}</p>
-                                        <div className="rating">★ {book.average_rating}</div>
+                    {token && (
+                        <section className="popular-section">
+                            <h2>Recommended For You</h2>
+                            <div className="books-grid">
+                                {popularBooks.map(book => (
+                                    <div
+                                        key={book.id}
+                                        className="book-card"
+                                        onClick={() => handleBookClick(book.id)}
+                                    >
+                                        <img src={book.cover} alt={book.title} />
+                                        <div className="book-info">
+                                            <h3>{book.title}</h3>
+                                            <p>{book.author.name}</p>
+                                            <div className="rating">★ {book.average_rating.toFixed(1)}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
+                                ))}
+                            </div>
+                        </section>
+                    )}
                 </>
             )}
         </div>

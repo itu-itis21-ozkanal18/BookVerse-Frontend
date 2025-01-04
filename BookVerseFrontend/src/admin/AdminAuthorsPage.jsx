@@ -8,30 +8,28 @@ const AdminAuthorsPage = () => {
     const [authors, setAuthors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
+    const [showModal, setShowModal] = useState(false);
     const [editingAuthor, setEditingAuthor] = useState(null);
-    const [newAuthor, setNewAuthor] = useState({ name: '', bio: '' });
+    const [authorForm, setAuthorForm] = useState({
+        name: '',
+        book_count: 0
+    });
 
     const token = localStorage.getItem("AT");
 
     const columns = [
         { key: 'id', label: 'ID' },
         { key: 'name', label: 'Name' },
-        { key: 'bio', label: 'Bio' }
     ];
-
 
     useEffect(() => {
         const fetchAuthors = async () => {
             try {
                 setLoading(true);
                 const response = await axios.get('/api/api/admin/authors/', {
-                    params: { page },
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                setAuthors(response.data.results || []);
-                setTotalPages(Math.ceil(response.data.count / 10));
+                setAuthors(response.data || []);
             } catch (error) {
                 setError(error.response?.data?.detail || "Failed to fetch authors");
                 setAuthors([]);
@@ -40,11 +38,11 @@ const AdminAuthorsPage = () => {
             }
         };
         fetchAuthors();
-    }, [page, token]);
+    }, [token]);
 
     const handleDeleteAuthor = async (authorId) => {
         try {
-            await axios.delete(`/api/admin/authors/${authorId}/`, {
+            await axios.delete(`/api/api/admin/authors/${authorId}/`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setAuthors(authors.filter(author => author.id !== authorId));
@@ -57,26 +55,34 @@ const AdminAuthorsPage = () => {
         e.preventDefault();
         try {
             if (editingAuthor) {
-                const response = await axios.put(
+                await axios.put(
                     `/api/api/admin/authors/${editingAuthor.id}/`,
-                    editingAuthor,
+                    authorForm,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
-                setAuthors(authors.map(author =>
-                    author.id === editingAuthor.id ? response.data : author
-                ));
-                setEditingAuthor(null);
             } else {
-                const response = await axios.post(
+                await axios.post(
                     '/api/api/admin/authors/',
-                    newAuthor,
+                    authorForm,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
-                setAuthors([...authors, response.data]);
-                setNewAuthor({ name: '', bio: '' });
             }
+            window.location.reload();
         } catch (error) {
             setError(error.response?.data?.detail || "Operation failed");
+        }
+    };
+
+    const handleEditClick = async (authorId) => {
+        try {
+            setShowModal(true);
+            setEditingAuthor(authors.find(auth => auth.id === authorId));
+            setAuthorForm({
+                name: authors.find(auth => auth.id === authorId).name,
+                book_count: authors.find(auth => auth.id === authorId).book_count
+            });
+        } catch (error) {
+            setError("Failed to fetch author details");
         }
     };
 
@@ -84,63 +90,65 @@ const AdminAuthorsPage = () => {
     if (error) return <div className="admin-error">Error: {error}</div>;
 
     return (
-        <div className="admin-container">
-            <h1>Author Management</h1>
-
-            <form onSubmit={handleSubmit} className="admin-form">
-                <input
-                    type="text"
-                    value={editingAuthor ? editingAuthor.name : newAuthor.name}
-                    onChange={(e) =>
-                        editingAuthor
-                            ? setEditingAuthor({ ...editingAuthor, name: e.target.value })
-                            : setNewAuthor({ ...newAuthor, name: e.target.value })
-                    }
-                    placeholder="Author Name"
-                    required
-                    className="admin-input"
-                />
-                <textarea
-                    value={editingAuthor ? editingAuthor.bio : newAuthor.bio}
-                    onChange={(e) =>
-                        editingAuthor
-                            ? setEditingAuthor({ ...editingAuthor, bio: e.target.value })
-                            : setNewAuthor({ ...newAuthor, bio: e.target.value })
-                    }
-                    placeholder="Author Bio"
-                    className="admin-textarea"
-                />
-                <div className="admin-form-buttons">
-                    <button type="submit" className="admin-submit-button">
-                        {editingAuthor ? "Update Author" : "Add Author"}
-                    </button>
-                    {editingAuthor && (
-                        <button
-                            type="button"
-                            onClick={() => setEditingAuthor(null)}
-                            className="admin-cancel-button"
-                        >
-                            Cancel
-                        </button>
-                    )}
-                </div>
-            </form>
+        <>
+            <div className="admin-header">
+                <h1>Author Management</h1>
+                <button
+                    onClick={() => {
+                        setEditingAuthor(null);
+                        setAuthorForm({ name: '', book_count: 0 });
+                        setShowModal(true);
+                    }}
+                    className="admin-add-button"
+                >
+                    Add New Author
+                </button>
+            </div>
 
             <AdminTable
                 columns={columns}
                 data={authors}
                 onDelete={handleDeleteAuthor}
-                onEdit={setEditingAuthor}
+                onRowClick={handleEditClick}
             />
 
-            {totalPages > 1 && (
-                <AdminPagination
-                    page={page}
-                    totalPages={totalPages}
-                    onPageChange={setPage}
-                />
+            {showModal && (
+                <div className="admin-modal-overlay">
+                    <div className="admin-modal">
+                        <h2>{editingAuthor ? 'Edit Author' : 'Add New Author'}</h2>
+                        <form onSubmit={handleSubmit} className="admin-form">
+                            <div className="form-group">
+                                <label>Author Name:</label>
+                                <input
+                                    type="text"
+                                    value={authorForm.name}
+                                    onChange={e => setAuthorForm({ ...authorForm, name: e.target.value })}
+                                    className="admin-input"
+                                    required
+                                    placeholder="Enter author name"
+                                />
+                            </div>
+                            <div className="admin-form-buttons">
+                                <button type="submit" className="admin-submit-button">
+                                    {editingAuthor ? 'Update Author' : 'Add Author'}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowModal(false);
+                                        setEditingAuthor(null);
+                                        setAuthorForm({ name: '', book_count: 0 });
+                                    }}
+                                    className="admin-cancel-button"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             )}
-        </div>
+        </>
     );
 };
 

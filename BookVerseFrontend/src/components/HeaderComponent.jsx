@@ -24,8 +24,11 @@ const HeaderComponent = () => {
         const fetchCategories = async () => {
             try {
                 const response = await axios.get("/api/get-categories/");
-                const categories = response.data.data.filter((cat) => cat.book_count > 0);
-                setCategories(categories);
+                const sortedCategories = response.data.data
+                    .filter((cat) => cat.book_count > 0)
+                    .sort((a, b) => b.book_count - a.book_count)
+                    .slice(0, 10); // Take only top 10
+                setCategories(sortedCategories);
             } catch (error) {
                 console.error("Error fetching categories:", error);
             }
@@ -114,7 +117,7 @@ const HeaderComponent = () => {
                                 localStorage.removeItem("AT");
                                 localStorage.removeItem("RT");
                                 localStorage.removeItem("UN");
-                                navigate('/');
+                                window.location.reload();
                             }}
                         >
                             LOGOUT

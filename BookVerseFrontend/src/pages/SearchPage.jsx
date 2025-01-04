@@ -11,47 +11,60 @@ function SearchPage() {
 
     const [books, setBooks] = useState([]);
     const [authors, setAuthors] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+    const [bookLoading, setBookLoading] = useState(false);
+    const [authorLoading, setAuthorLoading] = useState(false);
+    const [bookError, setBookError] = useState("");
+    const [authorError, setAuthorError] = useState("");
 
     const [bookPage, setBookPage] = useState(1);
     const [authorPage, setAuthorPage] = useState(1);
     const itemsPerPage = 10;
 
-    useEffect(() => {
-        if (keyword) {
-            fetchResults();
-        }
-    }, [keyword, bookPage, authorPage]);
-
-    const fetchResults = async () => {
-        setLoading(true);
-        setError("");
+    const fetchBooks = async () => {
+        setBookLoading(true);
+        setBookError("");
         try {
-            const book_response = await axios.get(`/api/get-book/?s=${encodeURIComponent(keyword)}&limit=20`);
-            const author_response = await axios.get(`/api/get-author/?s=${encodeURIComponent(keyword)}&limit=20`);
-            const bookResults = book_response.data.data;
-            const authorResults = author_response.data.data;
-
-           
-
-            setBooks(bookResults);
-            setAuthors(authorResults);
+            const response = await axios.get(`/api/get-book/?s=${encodeURIComponent(keyword)}&limit=20`);
+            setBooks(response.data.data);
         } catch (error) {
-            setError(error.response?.data?.error || "Error fetching search results");
+            setBookError(error.response?.data?.error || "Error fetching books");
         } finally {
-            setLoading(false);
+            setBookLoading(false);
         }
     };
+
+    const fetchAuthors = async () => {
+        setAuthorLoading(true);
+        setAuthorError("");
+        try {
+            const response = await axios.get(`/api/get-author/?s=${encodeURIComponent(keyword)}&limit=20`);
+            setAuthors(response.data.data);
+        } catch (error) {
+            setAuthorError(error.response?.data?.error || "Error fetching authors");
+        } finally {
+            setAuthorLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (keyword) {
+            fetchBooks();
+        }
+    }, [keyword, bookPage]);
+
+    useEffect(() => {
+        if (keyword) {
+            fetchAuthors();
+        }
+    }, [keyword, authorPage]);
 
     const handleBookClick = (bookId) => {
         navigate(`/book/${bookId}`);
     };
-    
+
     const handleAuthorClick = (authorId) => {
         navigate(`/author/${authorId}`);
     };
-
 
     return (
         <div>
@@ -59,14 +72,13 @@ function SearchPage() {
             <div className="search-container">
                 <h2 className="search-keyword">Searching for: "{keyword}"</h2>
 
-                {loading && <div className="loading-message">Loading results...</div>}
-                {error && <div className="error-message">{error}</div>}
+                <div className="search-section">
+                    <h3>Titles:</h3>
+                    {bookLoading && <div className="loading-message">Loading books...</div>}
+                    {bookError && <div className="error-message">{bookError}</div>}
 
-                {!loading && !error && (
-                    <>
-                        {/* Titles Section */}
-                        <div className="search-section">
-                            <h3>Titles:</h3>
+                    {!bookLoading && !bookError && (
+                        <>
                             {books.length > 0 ? (
                                 <>
                                     <div className="page-selector">
@@ -118,11 +130,18 @@ function SearchPage() {
                             ) : (
                                 <p className="no-results">No books found matching "{keyword}"</p>
                             )}
-                        </div>
+                        </>
+                    )}
+                </div>
 
-                        {/* Authors Section */}
-                        <div className="search-section">
-                            <h3>Authors:</h3>
+                {/* Authors Section */}
+                <div className="search-section">
+                    <h3>Authors:</h3>
+                    {authorLoading && <div className="loading-message">Loading authors...</div>}
+                    {authorError && <div className="error-message">{authorError}</div>}
+
+                    {!authorLoading && !authorError && (
+                        <>
                             {authors.length > 0 ? (
                                 <>
                                     <div className="page-selector">
@@ -161,12 +180,7 @@ function SearchPage() {
                                                     className="author-card"
                                                     onClick={() => handleAuthorClick(author.id)}
                                                 >
-                                                    
-                                                    
-                                                        
-                                                        <h3 className="author-title">{author.name}</h3>
-                                                        
-                                                    
+                                                    <h3 className="author-title">{author.name}</h3>
                                                 </div>
                                             ))}
                                     </div>
@@ -174,9 +188,9 @@ function SearchPage() {
                             ) : (
                                 <p className="no-results">No authors found matching "{keyword}"</p>
                             )}
-                        </div>
-                    </>
-                )}
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     );

@@ -8,10 +8,11 @@ const AdminCategoriesPage = () => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
+    const [showModal, setShowModal] = useState(false);
     const [editingCategory, setEditingCategory] = useState(null);
-    const [newCategory, setNewCategory] = useState({ name: '' });
+    const [categoryForm, setCategoryForm] = useState({
+        name: ''
+    });
 
     const token = localStorage.getItem("AT");
 
@@ -25,11 +26,9 @@ const AdminCategoriesPage = () => {
             try {
                 setLoading(true);
                 const response = await axios.get('/api/api/admin/categories/', {
-                    params: { page },
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                setCategories(response.data.results || []);
-                setTotalPages(Math.ceil(response.data.count / 10));
+                setCategories(response.data || []);
             } catch (error) {
                 setError(error.response?.data?.detail || "Failed to fetch categories");
                 setCategories([]);
@@ -38,7 +37,7 @@ const AdminCategoriesPage = () => {
             }
         };
         fetchCategories();
-    }, [page, token]);
+    }, [token]);
 
     const handleDeleteCategory = async (categoryId) => {
         try {
@@ -55,26 +54,33 @@ const AdminCategoriesPage = () => {
         e.preventDefault();
         try {
             if (editingCategory) {
-                const response = await axios.put(
-                    `/api/admin/categories/${editingCategory.id}/`,
-                    editingCategory,
+                await axios.put(
+                    `/api/api/admin/categories/${editingCategory.id}/`,
+                    categoryForm,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
-                setCategories(categories.map(category =>
-                    category.id === editingCategory.id ? response.data : category
-                ));
-                setEditingCategory(null);
             } else {
-                const response = await axios.post(
-                    '/api/admin/categories/',
-                    newCategory,
+                await axios.post(
+                    '/api/api/admin/categories/',
+                    categoryForm,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
-                setCategories([...categories, response.data]);
-                setNewCategory({ name: '' });
             }
+            window.location.reload();
         } catch (error) {
             setError(error.response?.data?.detail || "Operation failed");
+        }
+    };
+
+    const handleEditClick = async (categoryId) => {
+        try {
+            setShowModal(true);
+            setEditingCategory(categories.find(cat => cat.id === categoryId));
+            setCategoryForm({
+                name: categories.find(cat => cat.id === categoryId).name
+            });
+        } catch (error) {
+            setError("Failed to fetch category details");
         }
     };
 
@@ -82,53 +88,65 @@ const AdminCategoriesPage = () => {
     if (error) return <div className="admin-error">Error: {error}</div>;
 
     return (
-        <div className="admin-container">
-            <h1>Category Management</h1>
-
-            <form onSubmit={handleSubmit} className="admin-form">
-                <input
-                    type="text"
-                    value={editingCategory ? editingCategory.name : newCategory.name}
-                    onChange={(e) =>
-                        editingCategory
-                            ? setEditingCategory({ ...editingCategory, name: e.target.value })
-                            : setNewCategory({ name: e.target.value })
-                    }
-                    placeholder="Category Name"
-                    required
-                    className="admin-input"
-                />
-                <div className="admin-form-buttons">
-                    <button type="submit" className="admin-submit-button">
-                        {editingCategory ? "Update Category" : "Add Category"}
-                    </button>
-                    {editingCategory && (
-                        <button
-                            type="button"
-                            onClick={() => setEditingCategory(null)}
-                            className="admin-cancel-button"
-                        >
-                            Cancel
-                        </button>
-                    )}
-                </div>
-            </form>
+        <>
+            <div className="admin-header">
+                <h1>Category Management</h1>
+                <button
+                    onClick={() => {
+                        setEditingCategory(null);
+                        setCategoryForm({ name: '' });
+                        setShowModal(true);
+                    }}
+                    className="admin-add-button"
+                >
+                    Add New Category
+                </button>
+            </div>
 
             <AdminTable
                 columns={columns}
                 data={categories}
                 onDelete={handleDeleteCategory}
-                onEdit={setEditingCategory}
+                onRowClick={handleEditClick}
             />
 
-            {totalPages > 1 && (
-                <AdminPagination
-                    page={page}
-                    totalPages={totalPages}
-                    onPageChange={setPage}
-                />
+            {showModal && (
+                <div className="admin-modal-overlay">
+                    <div className="admin-modal">
+                        <h2>{editingCategory ? 'Edit Category' : 'Add New Category'}</h2>
+                        <form onSubmit={handleSubmit} className="admin-form">
+                            <div className="form-group">
+                                <label>Category Name:</label>
+                                <input
+                                    type="text"
+                                    value={categoryForm.name}
+                                    onChange={e => setCategoryForm({ ...categoryForm, name: e.target.value })}
+                                    className="admin-input"
+                                    required
+                                    placeholder="Enter category name"
+                                />
+                            </div>
+                            <div className="admin-form-buttons">
+                                <button type="submit" className="admin-submit-button">
+                                    {editingCategory ? 'Update Category' : 'Add Category'}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowModal(false);
+                                        setEditingCategory(null);
+                                        setCategoryForm({ name: '' });
+                                    }}
+                                    className="admin-cancel-button"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             )}
-        </div>
+        </>
     );
 };
 
