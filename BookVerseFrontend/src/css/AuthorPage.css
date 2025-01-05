@@ -120,3 +120,13 @@
     border-radius: 0.5vw;
     margin: 1vw 0;
 }
+
+.no-books-message {
+    text-align: center;
+    padding: 4vw;
+    font-size: 1.2vw;
+    color: #666;
+    background-color: #f8f9fa;
+    border-radius: 0.8vw;
+    font-family: var(--text-font);
+}

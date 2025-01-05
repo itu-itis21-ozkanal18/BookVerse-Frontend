@@ -10,6 +10,8 @@ function HomePage() {
     const [popularBooks, setPopularBooks] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [mostFavorited, setMostFavorited] = useState([]);
+    const [popularAuthors, setPopularAuthors] = useState([]);
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const token = localStorage.getItem("AT");
@@ -18,20 +20,24 @@ function HomePage() {
         const fetchHomePageData = async () => {
             try {
                 setLoading(true);
-                const [featuredResponse, newReleasesResponse, popularResponse, categoriesResponse] = await Promise.all([
+                const [featuredResponse, topRatedResponse, popularResponse, categoriesResponse, mostFavoritedResponse, popularAuthorsResponse] = await Promise.all([
                     axios.get('/api/get-book/?featured=true&limit=5'),
-                    axios.get('/api/get-book/?sort=newest&limit=10'),
+                    axios.get('/api/get-book/?order_rating=true'),
                     token != null ?
                         axios.get('/api/recommended-books/', {
                             headers: { Authorization: `Bearer ${token}` }
                         }) : axios.get('/api/get-book/?featured=true&limit=10'),
-                    axios.get('/api/get-categories/')
+                    axios.get('/api/get-categories/'),
+                    axios.get('/api/get-book/?order_rating=false&limit=5'),
+                    axios.get('/api/get-author/?limit=5')
                 ]);
 
                 setFeaturedBooks(featuredResponse.data.data);
-                setNewReleases(newReleasesResponse.data.data);
+                setNewReleases(topRatedResponse.data.data);
                 setPopularBooks(popularResponse.data.data);
                 setCategories(categoriesResponse.data.data);
+                setMostFavorited(mostFavoritedResponse.data.data);
+                setPopularAuthors(popularAuthorsResponse.data.data);
             } catch (error) {
                 setError('Failed to load content. Please try again later.');
                 console.error('Error fetching homepage data:', error);
@@ -73,11 +79,19 @@ function HomePage() {
                             <div className="hero-content">
                                 <h1>Welcome to BookVerse</h1>
                                 <p>Your gateway to endless stories and knowledge</p>
-                                {!localStorage.getItem('AT') && (
-                                    <button onClick={() => navigate('/login')} className="cta-button">
-                                        Join Now
+                                <div className="hero-buttons">
+                                    {!localStorage.getItem('AT') && (
+                                        <button onClick={() => navigate('/login')} className="cta-button">
+                                            Join Now
+                                        </button>
+                                    )}
+                                    <button
+                                        onClick={() => navigate('/ai-search')}
+                                        className="cta-button ai-search-button"
+                                    >
+                                        Try AI Search
                                     </button>
-                                )}
+                                </div>
                             </div>
                             <div className="hero-slider">
                                 {featuredBooks.slice(0, 3).map((book, index) => (
@@ -98,14 +112,14 @@ function HomePage() {
                         </div>
                     </section>
 
-                    {/* Featured Books Section */}
-                    <section className="featured-section">
+                    {/* Most Favorited Books Section */}
+                    <section className="popular-section">
                         <h2>Popular Books</h2>
-                        <div className="books-carousel">
-                            {featuredBooks.slice(0, 5).map(book => (
+                        <div className="books-grid-single-row">
+                            {mostFavorited.map(book => (
                                 <div
                                     key={book.id}
-                                    className="featured-book-card"
+                                    className="book-card"
                                     onClick={() => handleBookClick(book.id)}
                                 >
                                     <img src={book.cover} alt={book.title} />
@@ -114,6 +128,26 @@ function HomePage() {
                                         <p>{book.author.name}</p>
                                         <div className="rating">★ {book.average_rating.toFixed(1)}</div>
                                     </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* Popular Authors Section */}
+                    {/* Popular Authors Section */}
+                    <section className="popular-section">
+                        <h2>Popular Authors</h2>
+                        <div className="books-grid-single-row">
+                            {popularAuthors.map(author => (
+                                <div
+                                    key={author.id}
+                                    className="author-card"
+                                    onClick={() => navigate(`/author/${author.id}`)}
+                                >
+                                    <h3 className="author-title">{author.name}</h3>
+                                    <p className="author-stats">
+                                        {author.book_count} {author.book_count === 1 ? 'Book' : 'Books'} • {author.fav_book_count} {author.fav_book_count === 1 ? 'Favorite' : 'Favorites'}
+                                    </p>
                                 </div>
                             ))}
                         </div>
@@ -147,9 +181,9 @@ function HomePage() {
                         </div>
                     </section>
 
-                    {/* New Releases Section */}
+                    {/* Top Rated Section (previously New Releases) */}
                     <section className="new-releases-section">
-                        <h2>New Releases</h2>
+                        <h2>Top Rated Books</h2>
                         <div className="books-grid">
                             {newReleases.map(book => (
                                 <div

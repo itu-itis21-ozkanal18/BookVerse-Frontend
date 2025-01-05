@@ -229,3 +229,132 @@
     transform: translateY(-0.2vw);
     box-shadow: 0 0.4vw 0.8vw rgba(255, 107, 53, 0.4);
 }
+
+.edit-profile-button {
+    padding: 0.5vw 1.5vw;
+    font-size: 1vw;
+    border: none;
+    border-radius: 2vw;
+    cursor: pointer;
+    background-color: #ff6b35;
+    color: white;
+    transition: all 0.3s ease;
+    font-family: var(--text-font);
+    font-weight: 500;
+    margin-left: 1vw;
+}
+
+.edit-profile-button:hover {
+    background-color: #ff8a5c;
+    transform: translateY(-0.2vw);
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 2vw;
+    border-radius: 1vw;
+    box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 500px;
+}
+
+.modal-content h2 {
+    font-size: 1.8vw;
+    font-family: var(--title-font);
+    color: #333;
+    margin-bottom: 2vw;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1.5vw;
+}
+
+.form-group label {
+    display: block;
+    font-size: 1vw;
+    color: #333;
+    margin-bottom: 0.5vw;
+}
+
+.form-input {
+    width: 95%;
+    padding: 0.8vw;
+    font-size: 1vw;
+    border: 1px solid #ddd;
+    border-radius: 0.4vw;
+    transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #ff6b35;
+}
+
+.field-hint {
+    font-size: 0.8vw;
+    color: #666;
+    margin-top: 0.4vw;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1vw;
+    margin-top: 2vw;
+}
+
+.cancel-button,
+.submit-button {
+    flex: 1;
+    padding: 1vw;
+    border: none;
+    border-radius: 0.4vw;
+    font-size: 1vw;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-button {
+    background-color: #f0f0f0;
+    color: #666;
+}
+
+.cancel-button:hover {
+    background-color: #e0e0e0;
+}
+
+.submit-button {
+    background-color: #ff6b35;
+    color: white;
+}
+
+.submit-button:hover:not(:disabled) {
+    background-color: #ff8a5c;
+}
+
+.submit-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 1vw;
+    border-radius: 0.4vw;
+    margin-bottom: 1.5vw;
+    font-size: 0.9vw;
+}

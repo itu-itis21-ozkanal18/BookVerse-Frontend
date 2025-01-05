@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import HeaderComponent from '../components/HeaderComponent';
+import EditProfileModal from '../components/EditProfileModal';
 import '../css/ProfilePage.css';
 
 function ProfilePage() {
@@ -10,6 +11,7 @@ function ProfilePage() {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const token = localStorage.getItem("AT");
 
     useEffect(() => {
@@ -42,6 +44,15 @@ function ProfilePage() {
         navigate(`/book/${bookId}`);
     };
 
+    const handleUpdateSuccess = (newUsername) => {
+        if (newUsername) {
+            setUserData({
+                ...userData,
+                username: newUsername
+            });
+        }
+    };
+
     return (
         <div>
             <HeaderComponent />
@@ -53,7 +64,15 @@ function ProfilePage() {
                 ) : userData && (
                     <>
                         <div className="profile-header">
-                            <h1>{userData.username}'s Profile</h1>
+                            <div className="username-section">
+                                <h1>{userData.username}'s Profile</h1>
+                                <button
+                                    className="edit-profile-button"
+                                    onClick={() => setIsEditModalOpen(true)}
+                                >
+                                    Edit Profile
+                                </button>
+                            </div>
                             <div className="user-info">
                                 <p>Member since: {new Date(userData.date_joined).toLocaleDateString()}</p>
                                 <p>{userData.email}</p>
@@ -155,6 +174,12 @@ function ProfilePage() {
                     </>
                 )}
             </div>
+            <EditProfileModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                currentUsername={userData?.username}
+                onUpdateSuccess={handleUpdateSuccess}
+            />
         </div>
     );
 }

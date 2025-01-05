@@ -1,0 +1,136 @@
+.ai-search-container {
+    min-height: 100vh;
+    background-color: var(--background-color);
+}
+
+.ai-search-content {
+    padding: 4vw 8vw;
+}
+
+.ai-search-header {
+    text-align: center;
+    margin-bottom: 3vw;
+}
+
+.ai-search-header h1 {
+    font-size: 3vw;
+    font-family: var(--title-font);
+    margin-bottom: 1vw;
+    color: #333;
+}
+
+.ai-search-header p {
+    font-size: 1.2vw;
+    color: #666;
+    font-family: var(--text-font);
+}
+
+.search-box {
+    max-width: 800px;
+    margin: 0 auto 4vw;
+}
+
+.search-input {
+    width: 100%;
+    height: 150px;
+    padding: 1.5vw;
+    font-size: 1.1vw;
+    border: 2px solid #ddd;
+    border-radius: 0.5vw;
+    margin-bottom: 1vw;
+    resize: none;
+    font-family: var(--text-font);
+    transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #ff6b35;
+}
+
+.search-button {
+    width: 107.5%;
+    padding: 1vw;
+    font-size: 1.2vw;
+    background-color: #ff6b35;
+    color: white;
+    border: none;
+    border-radius: 0.5vw;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: #ff8a5c;
+}
+
+.search-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.results-section {
+    margin-top: 4vw;
+}
+
+.results-section h2 {
+    font-size: 2vw;
+    font-family: var(--title-font);
+    margin-bottom: 2vw;
+    color: #333;
+}
+
+/* Reusing HomePage styles for book cards */
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5vw;
+}
+
+.loading-container,
+.error-container {
+    min-height: 20vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--text-font);
+    font-size: 1.2vw;
+    color: #666;
+}
+
+.loading-spinner {
+    border: 0.4vw solid #f3f3f3;
+    border-top: 0.4vw solid #ff6b35;
+    border-radius: 50%;
+    width: 3vw;
+    height: 3vw;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1vw;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.error-container button {
+    margin-top: 1vw;
+    padding: 0.8vw 2vw;
+    background-color: #ff6b35;
+    color: white;
+    border: none;
+    border-radius: 0.4vw;
+    cursor: pointer;
+    font-size: 1vw;
+    transition: background-color 0.3s ease;
+}
+
+.error-container button:hover {
+    background-color: #ff8a5c;
+}

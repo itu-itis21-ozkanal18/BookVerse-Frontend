@@ -18,6 +18,9 @@ import AdminUserCommentsPage from './admin/AdminUserCommentsPage';
 import AdminCategoriesPage from './admin/AdminCategoriesPage';
 import AdminAuthorsPage from './admin/AdminAuthorsPage';
 import AdminRoute from './admin/AdminRoute';
+import AISearchPage from './pages/AISearchPage';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
 
 import '../index.css';
 
@@ -33,6 +36,9 @@ function App() {
         <Route path="/category/:categoryId" element={<CategoryPage />} />
         <Route path="/author/:authorId" element={<AuthorPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/ai-search" element={<AISearchPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/logout" element={<Navigate to="/login" />} />
         <Route element={<AdminRoute />}>
           <Route path="/admin" element={<AdminLayout />}>

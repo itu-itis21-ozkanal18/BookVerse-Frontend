@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../css/FooterComponent.css";
 
 import Logo from "../assets/Logo.png";
@@ -6,6 +7,8 @@ import GoogleIcon from "../assets/google-icon.png";
 import TwitterIcon from "../assets/twitter-icon.png";
 
 function FooterComponent() {
+  const navigate = useNavigate();
+
   return (
     <div className="footer">
       <div className="footer-container">
@@ -17,9 +20,21 @@ function FooterComponent() {
 
         {/* Center Section */}
         <div className="footer-center">
-          <button>BookVerse PRO</button>
-          <a href="/about-us">ABOUT US</a>
-          <a href="/contact">CONTACT US</a>
+          <button className="pro-button">
+            BookVerse PRO
+          </button>
+          <button
+            onClick={() => navigate('/about')}
+            className="nav-link"
+          >
+            ABOUT US
+          </button>
+          <button
+            onClick={() => navigate('/contact')}
+            className="nav-link"
+          >
+            CONTACT US
+          </button>
         </div>
 
         {/* Right Section */}

@@ -15,17 +15,24 @@ function SearchPage() {
     const [authorLoading, setAuthorLoading] = useState(false);
     const [bookError, setBookError] = useState("");
     const [authorError, setAuthorError] = useState("");
+    const [bookPagination, setBookPagination] = useState(null);
+    const [authorPagination, setAuthorPagination] = useState(null);
+    const [currentBookPage, setCurrentBookPage] = useState(1);
+    const [currentAuthorPage, setCurrentAuthorPage] = useState(1);
 
-    const [bookPage, setBookPage] = useState(1);
-    const [authorPage, setAuthorPage] = useState(1);
-    const itemsPerPage = 10;
+    const limit = 10;
 
-    const fetchBooks = async () => {
+    const fetchBooks = async (page) => {
         setBookLoading(true);
         setBookError("");
         try {
-            const response = await axios.get(`/api/get-book/?s=${encodeURIComponent(keyword)}&limit=20`);
+            const offset = (page - 1) * limit;
+            const response = await axios.get(
+                `/api/get-book/?s=${encodeURIComponent(keyword)}&limit=${limit}&offset=${offset}`
+            );
             setBooks(response.data.data);
+            setBookPagination(response.data.pagination);
+            setCurrentBookPage(page);
         } catch (error) {
             setBookError(error.response?.data?.error || "Error fetching books");
         } finally {
@@ -33,12 +40,17 @@ function SearchPage() {
         }
     };
 
-    const fetchAuthors = async () => {
+    const fetchAuthors = async (page) => {
         setAuthorLoading(true);
         setAuthorError("");
         try {
-            const response = await axios.get(`/api/get-author/?s=${encodeURIComponent(keyword)}&limit=20`);
+            const offset = (page - 1) * limit;
+            const response = await axios.get(
+                `/api/get-author/?s=${encodeURIComponent(keyword)}&limit=${limit}&offset=${offset}`
+            );
             setAuthors(response.data.data);
+            setAuthorPagination(response.data.pagination);
+            setCurrentAuthorPage(page);
         } catch (error) {
             setAuthorError(error.response?.data?.error || "Error fetching authors");
         } finally {
@@ -48,15 +60,12 @@ function SearchPage() {
 
     useEffect(() => {
         if (keyword) {
-            fetchBooks();
+            fetchBooks(1);
+            fetchAuthors(1);
+            setCurrentBookPage(1);
+            setCurrentAuthorPage(1);
         }
-    }, [keyword, bookPage]);
-
-    useEffect(() => {
-        if (keyword) {
-            fetchAuthors();
-        }
-    }, [keyword, authorPage]);
+    }, [keyword]);
 
     const handleBookClick = (bookId) => {
         navigate(`/book/${bookId}`);
@@ -66,12 +75,26 @@ function SearchPage() {
         navigate(`/author/${authorId}`);
     };
 
+    const getTotalPages = (pagination) => {
+        if (!pagination) return 1;
+        return Math.ceil(pagination.total / pagination.limit);
+    };
+
+    const renderPageOptions = (totalPages) => {
+        return Array.from({ length: totalPages }, (_, index) => index + 1).map(page => (
+            <option key={page} value={page}>
+                Page {page}
+            </option>
+        ));
+    };
+
     return (
         <div>
             <HeaderComponent />
             <div className="search-container">
                 <h2 className="search-keyword">Searching for: "{keyword}"</h2>
 
+                {/* Books Section */}
                 <div className="search-section">
                     <h3>Titles:</h3>
                     {bookLoading && <div className="loading-message">Loading books...</div>}
@@ -84,47 +107,44 @@ function SearchPage() {
                                     <div className="page-selector">
                                         <button
                                             className="page-button"
-                                            disabled={bookPage === 1}
-                                            onClick={() => setBookPage(prev => prev - 1)}
+                                            disabled={currentBookPage === 1}
+                                            onClick={() => fetchBooks(currentBookPage - 1)}
                                         >
                                             Previous
                                         </button>
                                         <select
                                             className="page-select"
-                                            value={bookPage}
-                                            onChange={(e) => setBookPage(Number(e.target.value))}
+                                            value={currentBookPage}
+                                            onChange={(e) => fetchBooks(Number(e.target.value))}
                                         >
-                                            {[...Array(Math.ceil(books.length / itemsPerPage))].map((_, i) => (
-                                                <option key={i + 1} value={i + 1}>
-                                                    Page {i + 1}
-                                                </option>
-                                            ))}
+                                            {renderPageOptions(getTotalPages(bookPagination))}
                                         </select>
+                                        <span className="total-pages">
+                                            of {getTotalPages(bookPagination)} pages
+                                        </span>
                                         <button
                                             className="page-button"
-                                            disabled={bookPage >= Math.ceil(books.length / itemsPerPage)}
-                                            onClick={() => setBookPage(prev => prev + 1)}
+                                            disabled={currentBookPage >= getTotalPages(bookPagination)}
+                                            onClick={() => fetchBooks(currentBookPage + 1)}
                                         >
                                             Next
                                         </button>
                                     </div>
                                     <div className="books-grid">
-                                        {books
-                                            .slice((bookPage - 1) * itemsPerPage, bookPage * itemsPerPage)
-                                            .map((book) => (
-                                                <div
-                                                    key={book.id}
-                                                    className="book-card"
-                                                    onClick={() => handleBookClick(book.id)}
-                                                >
-                                                    <img src={book.cover} alt={book.title} />
-                                                    <div className="book-info">
-                                                        <span className="book-category">{book.category.name}</span>
-                                                        <h4 className="book-title">{book.title}</h4>
-                                                        <span className="book-author">{book.author.name}</span>
-                                                    </div>
+                                        {books.map((book) => (
+                                            <div
+                                                key={book.id}
+                                                className="book-card"
+                                                onClick={() => handleBookClick(book.id)}
+                                            >
+                                                <img src={book.cover} alt={book.title} />
+                                                <div className="book-info">
+                                                    <span className="book-category">{book.category.name}</span>
+                                                    <h4 className="book-title">{book.title}</h4>
+                                                    <span className="book-author">{book.author.name}</span>
                                                 </div>
-                                            ))}
+                                            </div>
+                                        ))}
                                     </div>
                                 </>
                             ) : (
@@ -147,42 +167,42 @@ function SearchPage() {
                                     <div className="page-selector">
                                         <button
                                             className="page-button"
-                                            disabled={authorPage === 1}
-                                            onClick={() => setAuthorPage(prev => prev - 1)}
+                                            disabled={currentAuthorPage === 1}
+                                            onClick={() => fetchAuthors(currentAuthorPage - 1)}
                                         >
                                             Previous
                                         </button>
                                         <select
                                             className="page-select"
-                                            value={authorPage}
-                                            onChange={(e) => setAuthorPage(Number(e.target.value))}
+                                            value={currentAuthorPage}
+                                            onChange={(e) => fetchAuthors(Number(e.target.value))}
                                         >
-                                            {[...Array(Math.ceil(authors.length / itemsPerPage))].map((_, i) => (
-                                                <option key={i + 1} value={i + 1}>
-                                                    Page {i + 1}
-                                                </option>
-                                            ))}
+                                            {renderPageOptions(getTotalPages(authorPagination))}
                                         </select>
+                                        <span className="total-pages">
+                                            of {getTotalPages(authorPagination)} pages
+                                        </span>
                                         <button
                                             className="page-button"
-                                            disabled={authorPage >= Math.ceil(authors.length / itemsPerPage)}
-                                            onClick={() => setAuthorPage(prev => prev + 1)}
+                                            disabled={currentAuthorPage >= getTotalPages(authorPagination)}
+                                            onClick={() => fetchAuthors(currentAuthorPage + 1)}
                                         >
                                             Next
                                         </button>
                                     </div>
                                     <div className="books-grid">
-                                        {authors
-                                            .slice((authorPage - 1) * itemsPerPage, authorPage * itemsPerPage)
-                                            .map((author) => (
-                                                <div
-                                                    key={author.id}
-                                                    className="author-card"
-                                                    onClick={() => handleAuthorClick(author.id)}
-                                                >
-                                                    <h3 className="author-title">{author.name}</h3>
-                                                </div>
-                                            ))}
+                                        {authors.map((author) => (
+                                            <div
+                                                key={author.id}
+                                                className="author-card"
+                                                onClick={() => handleAuthorClick(author.id)}
+                                            >
+                                                <h3 className="author-title">{author.name}</h3>
+                                                <p className="author-stats">
+                                                    {author.book_count} {author.book_count === 1 ? 'Book' : 'Books'} • {author.fav_book_count} {author.fav_book_count === 1 ? 'Favorite' : 'Favorites'}
+                                                </p>
+                                            </div>
+                                        ))}
                                     </div>
                                 </>
                             ) : (
