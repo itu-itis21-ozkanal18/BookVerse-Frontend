@@ -19,9 +19,11 @@ function AuthorPage() {
                 setError("");
 
                 const authorResponse = await axios.get(`/api/get-author/?id=${authorId}`);
-                const authorData = authorResponse.data.data[0];
-                setAuthor(authorData);
-                setBooks(authorData.book_books || []);
+                setAuthor(authorResponse.data.data[0]);
+
+                const booksResponse = await axios.get(`/api/get-book/?author_id=${authorId}`);
+                setBooks(booksResponse.data.data);
+
             } catch (error) {
                 setError("Author not found");
             } finally {
