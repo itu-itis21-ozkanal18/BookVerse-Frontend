@@ -8,8 +8,6 @@ const AdminTable = ({ columns, data, onDelete, onRowClick }) => {
         }
     };
 
-    console.log(data);
-
     return (
         <div className="admin-table-container">
             <table className="admin-table">
