@@ -12,27 +12,28 @@ function CategoryPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [categoryName, setCategoryName] = useState("");
-
-    // Pagination States
-    const [bookPage, setBookPage] = useState(1);
-    const itemsPerPage = 10;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pagination, setPagination] = useState(null);
+    const limit = 10;
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
                 setError("");
-                setBookPage(1); // Reset to first page when category changes
 
                 if (categoryId === 'all') {
                     const response = await axios.get('/api/get-categories/');
                     setCategories(response.data.data);
                 } else {
+                    const offset = (currentPage - 1) * limit;
                     const [booksResponse, categoryResponse] = await Promise.all([
-                        axios.get(`/api/get-book/?category_id=${categoryId}`),
+                        axios.get(`/api/get-book/?category_id=${categoryId}&limit=${limit}&offset=${offset}`),
                         axios.get(`/api/get-categories/?category_id=${categoryId}`)
                     ]);
+
                     setBooks(booksResponse.data.data);
+                    setPagination(booksResponse.data.pagination);
                     setCategoryName(categoryResponse.data.data[0]?.name || '');
                 }
             } catch (error) {
@@ -43,7 +44,7 @@ function CategoryPage() {
         };
 
         fetchData();
-    }, [categoryId]);
+    }, [categoryId, currentPage]);
 
     const handleCategoryClick = (category) => {
         navigate(`/category/${category.id}`);
@@ -53,23 +54,18 @@ function CategoryPage() {
         navigate(`/book/${bookId}`);
     };
 
-    // Pagination Handlers
-    const totalPages = Math.ceil(books.length / itemsPerPage);
-
-    const handlePreviousPage = () => {
-        setBookPage(prev => Math.max(prev - 1, 1));
+    const getTotalPages = () => {
+        if (!pagination) return 1;
+        return Math.ceil(pagination.total / pagination.limit);
     };
 
-    const handleNextPage = () => {
-        setBookPage(prev => Math.min(prev + 1, totalPages));
+    const renderPageOptions = (totalPages) => {
+        return Array.from({ length: totalPages }, (_, index) => index + 1).map(page => (
+            <option key={page} value={page}>
+                Page {page}
+            </option>
+        ));
     };
-
-    const handlePageSelect = (e) => {
-        setBookPage(Number(e.target.value));
-    };
-
-    // Sliced Books for Current Page
-    const paginatedBooks = books.slice((bookPage - 1) * itemsPerPage, bookPage * itemsPerPage);
 
     return (
         <div>
@@ -80,7 +76,6 @@ function CategoryPage() {
                 ) : error ? (
                     <div className="error-message">{error}</div>
                 ) : categoryId === 'all' ? (
-                    // All Categories View
                     <div className="all-categories">
                         <h1 className="category-title">All Categories</h1>
                         <div className="categories-grid">
@@ -97,13 +92,38 @@ function CategoryPage() {
                         </div>
                     </div>
                 ) : (
-                    // Single Category View with Pagination
                     <div className="single-category">
                         <h1 className="category-title">{categoryName}</h1>
                         {books.length > 0 ? (
                             <>
+                                <div className="page-selector">
+                                    <button
+                                        className="page-button"
+                                        disabled={currentPage === 1}
+                                        onClick={() => setCurrentPage(prev => prev - 1)}
+                                    >
+                                        Previous
+                                    </button>
+                                    <select
+                                        className="page-select"
+                                        value={currentPage}
+                                        onChange={(e) => setCurrentPage(Number(e.target.value))}
+                                    >
+                                        {renderPageOptions(getTotalPages())}
+                                    </select>
+                                    <span className="total-pages">
+                                        of {getTotalPages()} pages
+                                    </span>
+                                    <button
+                                        className="page-button"
+                                        disabled={currentPage >= getTotalPages()}
+                                        onClick={() => setCurrentPage(prev => prev + 1)}
+                                    >
+                                        Next
+                                    </button>
+                                </div>
                                 <div className="books-grid">
-                                    {paginatedBooks.map((book) => (
+                                    {books.map((book) => (
                                         <div
                                             key={book.id}
                                             className="book-card"
@@ -113,38 +133,10 @@ function CategoryPage() {
                                             <div className="book-info">
                                                 <h3>{book.title}</h3>
                                                 <p>{book.author.name}</p>
-                                                <div className="rating">★ {book.average_rating}</div>
+                                                <div className="rating">★ {book.average_rating.toFixed(1)}</div>
                                             </div>
                                         </div>
                                     ))}
-                                </div>
-                                {/* Pagination Controls */}
-                                <div className="pagination-controls">
-                                    <button
-                                        className="page-button"
-                                        disabled={bookPage === 1}
-                                        onClick={handlePreviousPage}
-                                    >
-                                        Previous
-                                    </button>
-                                    <select
-                                        className="page-select"
-                                        value={bookPage}
-                                        onChange={handlePageSelect}
-                                    >
-                                        {[...Array(totalPages)].map((_, i) => (
-                                            <option key={i + 1} value={i + 1}>
-                                                Page {i + 1}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <button
-                                        className="page-button"
-                                        disabled={bookPage >= totalPages}
-                                        onClick={handleNextPage}
-                                    >
-                                        Next
-                                    </button>
                                 </div>
                             </>
                         ) : (

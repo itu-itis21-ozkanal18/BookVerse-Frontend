@@ -24,13 +24,22 @@
 .footer-left {
     display: flex;
     align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.footer-left:hover {
+    transform: translateY(-2px);
 }
 
 .footer-left img {
     height: 5.21vw;
-    /* 100px to vw */
     margin-right: 0.52vw;
-    /* 10px to vw */
+    transition: transform 0.3s ease;
+}
+
+.footer-left:hover img {
+    transform: rotate(10deg);
 }
 
 .footer-left h1 {
@@ -38,6 +47,11 @@
     font-weight: 700;
     margin: 0;
     font-size: 1.56vw;
+    transition: color 0.3s ease;
+}
+
+.footer-left:hover h1 {
+    color: #ff5733;
 }
 
 .footer-center .pro-button {

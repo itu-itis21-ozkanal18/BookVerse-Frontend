@@ -13,7 +13,7 @@ function FooterComponent() {
     <div className="footer">
       <div className="footer-container">
         {/* Left Section */}
-        <div className="footer-left">
+        <div className="footer-left" onClick={() => navigate('/')} role="button">
           <img src={Logo} alt="BookVerse Logo" />
           <h1>BookVerse</h1>
         </div>

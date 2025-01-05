@@ -117,3 +117,46 @@
     border-radius: 0.5vw;
     margin: 1vw 0;
 }
+
+.page-selector {
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+    margin-bottom: 1.5vw;
+    padding: 0 8vw;
+}
+
+.page-button {
+    padding: 0.5vw 1vw;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0.25vw;
+    cursor: pointer;
+    font-size: 0.9vw;
+    transition: background-color 0.3s ease;
+}
+
+.page-button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.page-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.page-select {
+    padding: 0.5vw 1vw;
+    border: 1px solid #ccc;
+    border-radius: 0.25vw;
+    font-size: 0.9vw;
+    cursor: pointer;
+    min-width: 120px;
+}
+
+.total-pages {
+    font-size: 0.9vw;
+    color: #666;
+    margin: 0 1vw;
+}

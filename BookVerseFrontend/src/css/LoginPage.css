@@ -176,3 +176,14 @@
     font-family: var(--text-font);
     text-align: center;
 }
+
+.logo {
+    width: 100%;
+    max-width: 20.83vw;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}

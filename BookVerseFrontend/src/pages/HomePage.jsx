@@ -134,7 +134,6 @@ function HomePage() {
                     </section>
 
                     {/* Popular Authors Section */}
-                    {/* Popular Authors Section */}
                     <section className="popular-section">
                         <h2>Popular Authors</h2>
                         <div className="books-grid-single-row">
@@ -142,7 +141,7 @@ function HomePage() {
                                 <div
                                     key={author.id}
                                     className="author-card"
-                                    onClick={() => navigate(`/author/${author.id}`)}
+                                    onClick={() => navigate(`/author/${author.id}/?order_fav=true`)}
                                 >
                                     <h3 className="author-title">{author.name}</h3>
                                     <p className="author-stats">
