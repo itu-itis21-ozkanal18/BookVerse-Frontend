@@ -9,8 +9,8 @@ function SignupComponent({ onSwitchToLogin, onSwitchToForgot }) {
     });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    // Basic email validation
     const isValidEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
@@ -18,22 +18,24 @@ function SignupComponent({ onSwitchToLogin, onSwitchToForgot }) {
 
     const handleSignup = async () => {
         try {
-            // Reset messages
+            if (isLoading) return;
+
             setError('');
             setSuccess('');
+            setIsLoading(true);
 
-            // Form validation
             if (!formData.username || !formData.email || !formData.password) {
                 setError('All fields are required');
+                setIsLoading(false);
                 return;
             }
 
             if (!isValidEmail(formData.email)) {
                 setError('Please enter a valid email address');
+                setIsLoading(false);
                 return;
             }
 
-            // Create form data
             const formBody = new URLSearchParams();
             formBody.append('username', formData.username);
             formBody.append('email', formData.email);
@@ -46,17 +48,12 @@ function SignupComponent({ onSwitchToLogin, onSwitchToForgot }) {
             });
 
             if (response.status === 201) {
-                setSuccess(response.data.message);
-                // Clear form
+                setSuccess('Account created successfully! Please check your email to verify your account.');
                 setFormData({
                     username: '',
                     email: '',
                     password: ''
                 });
-                // Optionally redirect to login after a delay
-                setTimeout(() => {
-                    onSwitchToLogin();
-                }, 3000);
             }
 
         } catch (error) {
@@ -65,6 +62,8 @@ function SignupComponent({ onSwitchToLogin, onSwitchToForgot }) {
             } else {
                 setError('An error occurred during signup');
             }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -77,6 +76,7 @@ function SignupComponent({ onSwitchToLogin, onSwitchToForgot }) {
         <div className="signup-box">
             {error && <div className="error-message">{error}</div>}
             {success && <div className="success-message">{success}</div>}
+            {isLoading && <div className="loading-message">Creating your account...</div>}
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -84,6 +84,7 @@ function SignupComponent({ onSwitchToLogin, onSwitchToForgot }) {
                     className="signup-input"
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                    disabled={isLoading}
                 />
                 <input
                     type="email"
@@ -91,6 +92,7 @@ function SignupComponent({ onSwitchToLogin, onSwitchToForgot }) {
                     className="signup-input"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    disabled={isLoading}
                 />
                 <input
                     type="password"
@@ -98,8 +100,15 @@ function SignupComponent({ onSwitchToLogin, onSwitchToForgot }) {
                     className="signup-input"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    disabled={isLoading}
                 />
-                <button type="submit" className="signup-button">Sign Up</button>
+                <button
+                    type="submit"
+                    className="signup-button"
+                    disabled={isLoading}
+                >
+                    {isLoading ? 'Signing up...' : 'Sign Up'}
+                </button>
             </form>
             <div className="divider">
                 <hr />
@@ -110,12 +119,14 @@ function SignupComponent({ onSwitchToLogin, onSwitchToForgot }) {
                 <button
                     className="login-button"
                     onClick={onSwitchToLogin}
+                    disabled={isLoading}
                 >
                     Login
                 </button>
                 <button
                     className="forgot-password-button"
                     onClick={onSwitchToForgot}
+                    disabled={isLoading}
                 >
                     Forgot Password
                 </button>
