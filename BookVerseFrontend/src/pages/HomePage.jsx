@@ -29,7 +29,7 @@ function HomePage() {
                         }) : axios.get('/api/get-book/?featured=true&limit=10'),
                     axios.get('/api/get-categories/'),
                     axios.get('/api/get-book/?order_rating=false&limit=5'),
-                    axios.get('/api/get-author/?limit=5')
+                    axios.get('/api/get-author/?limit=5&order_fav=true')
                 ]);
 
                 setFeaturedBooks(featuredResponse.data.data);
