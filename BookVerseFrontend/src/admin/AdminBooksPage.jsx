@@ -9,8 +9,13 @@ const AdminBooksPage = () => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [editingBook, setEditingBook] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pagination, setPagination] = useState(null);
+    const limit = 10;
     const [bookForm, setBookForm] = useState({
         title: '',
         summary: '',
@@ -48,8 +53,10 @@ const AdminBooksPage = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
+                const offset = (currentPage - 1) * limit;
+
                 const [booksRes, authorsRes, categoriesRes] = await Promise.all([
-                    axios.get('/api/api/admin/books/', {
+                    axios.get(`/api/api/admin/books/?limit=${limit}&offset=${offset}${searchQuery ? `&search=${searchQuery}` : ''}`, {
                         headers: { Authorization: `Bearer ${token}` }
                     }),
                     axios.get('/api/api/admin/authors/', {
@@ -60,7 +67,8 @@ const AdminBooksPage = () => {
                     })
                 ]);
 
-                setBooks(booksRes.data || []);
+                setBooks(booksRes.data.data || []);
+                setPagination(booksRes.data.pagination);
                 setAuthors(authorsRes.data || []);
                 setCategories(categoriesRes.data || []);
                 setError(null);
@@ -73,8 +81,20 @@ const AdminBooksPage = () => {
         };
 
         fetchData();
-    }, [token]);
+    }, [currentPage, searchQuery, token]);
 
+    const getTotalPages = () => {
+        if (!pagination) return 1;
+        return Math.ceil(pagination.total / pagination.limit);
+    };
+
+    const renderPageOptions = (totalPages) => {
+        return Array.from({ length: totalPages }, (_, index) => index + 1).map(page => (
+            <option key={page} value={page}>
+                Page {page}
+            </option>
+        ));
+    };
 
 
     const handleEditClick = async (bookId) => {
@@ -203,6 +223,63 @@ const AdminBooksPage = () => {
                 >
                     Add New Book
                 </button>
+            </div>
+
+            {/* Search and Pagination Controls */}
+            <div className="admin-controls">
+                <div className="admin-search">
+                    <div className="search-input-group">
+                        <input
+                            type="text"
+                            placeholder="Search books..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="admin-search-input"
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    setSearchQuery(searchTerm);
+                                    setCurrentPage(1);
+                                }
+                            }}
+                        />
+                        <button
+                            className="admin-search-button"
+                            onClick={() => {
+                                setSearchQuery(searchTerm);
+                                setCurrentPage(1);
+                            }}
+                        >
+                            Search
+                        </button>
+                    </div>
+                </div>
+
+                <div className="page-selector">
+                    <button
+                        className="page-button"
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage(prev => prev - 1)}
+                    >
+                        Previous
+                    </button>
+                    <select
+                        className="page-select"
+                        value={currentPage}
+                        onChange={(e) => setCurrentPage(Number(e.target.value))}
+                    >
+                        {renderPageOptions(getTotalPages())}
+                    </select>
+                    <span className="total-pages">
+                        of {getTotalPages()} pages
+                    </span>
+                    <button
+                        className="page-button"
+                        disabled={currentPage >= getTotalPages()}
+                        onClick={() => setCurrentPage(prev => prev + 1)}
+                    >
+                        Next
+                    </button>
+                </div>
             </div>
 
             <div className="admin-table-section">

@@ -1,0 +1,71 @@
+.verify-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-color);
+    padding: 2vw;
+}
+
+.verify-box {
+    background: white;
+    padding: 3vw;
+    border-radius: 1vw;
+    box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 30vw;
+}
+
+.verify-logo {
+    width: 10vw;
+    margin-bottom: 2vw;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.verify-logo:hover {
+    transform: scale(1.05);
+}
+
+.verify-message {
+    font-size: 1.2vw;
+    margin-bottom: 2vw;
+    font-family: var(--text-font);
+    padding: 1vw;
+    border-radius: 0.5vw;
+}
+
+.verify-message.verifying {
+    background-color: #f8f9fa;
+    color: #666;
+}
+
+.verify-message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.verify-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.verify-actions {
+    margin-top: 2vw;
+}
+
+.verify-button {
+    background-color: #ff6b35;
+    color: white;
+    border: none;
+    padding: 0.8vw 2vw;
+    border-radius: 0.4vw;
+    font-size: 1vw;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: var(--text-font);
+}
+
+.verify-button:hover {
+    background-color: #ff8a5c;
+}

@@ -92,9 +92,6 @@ const AdminUsersPage = () => {
     };
 
     const handleDeleteUser = async (userId) => {
-        if (!window.confirm('Are you sure you want to delete this user?')) {
-            return;
-        }
 
         try {
             setLoading(true);
@@ -103,7 +100,6 @@ const AdminUsersPage = () => {
             });
 
             setUsers(users.filter(user => user.id !== userId));
-            alert('User deleted successfully');
         } catch (error) {
             console.error("Delete error:", error);
             alert(error.response?.data?.detail || "Failed to delete user. Please try again.");

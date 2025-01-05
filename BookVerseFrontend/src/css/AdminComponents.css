@@ -505,3 +505,100 @@
     border-color: #2c3e50;
     box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.1);
 }
+
+.admin-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2vw;
+}
+
+.admin-search {
+    flex: 1;
+    max-width: 300px;
+    margin-right: 2vw;
+}
+
+.admin-search-input {
+    width: 100%;
+    padding: 0.8vw;
+    border: 1px solid #ddd;
+    border-radius: 0.4vw;
+    font-size: 0.9vw;
+    transition: border-color 0.3s ease;
+}
+
+.admin-search-input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.page-selector {
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+}
+
+.page-button {
+    padding: 0.5vw 1vw;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0.25vw;
+    cursor: pointer;
+    font-size: 0.9vw;
+    transition: background-color 0.3s ease;
+}
+
+.page-button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.page-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.page-select {
+    padding: 0.5vw 1vw;
+    border: 1px solid #ccc;
+    border-radius: 0.25vw;
+    font-size: 0.9vw;
+    cursor: pointer;
+    min-width: 120px;
+}
+
+.total-pages {
+    font-size: 0.9vw;
+    color: #666;
+    margin: 0 1vw;
+}
+
+.search-input-group {
+    display: flex;
+    gap: 0.5vw;
+}
+
+.admin-search-input {
+    width: 100%;
+    padding: 0.8vw;
+    border: 1px solid #ddd;
+    border-radius: 0.4vw;
+    font-size: 0.9vw;
+    transition: border-color 0.3s ease;
+}
+
+.admin-search-button {
+    padding: 0.8vw 1.5vw;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0.4vw;
+    cursor: pointer;
+    font-size: 0.9vw;
+    transition: background-color 0.3s ease;
+}
+
+.admin-search-button:hover {
+    background-color: #0056b3;
+}

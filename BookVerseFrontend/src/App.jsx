@@ -21,6 +21,7 @@ import AdminRoute from './admin/AdminRoute';
 import AISearchPage from './pages/AISearchPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import VerifyEmailPage from './pages/VerifyEmailPage';
 
 import '../index.css';
 
@@ -32,6 +33,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/book/:bookId" element={<BookPage />} />
         <Route path="/reset-password/:uid/:token" element={<ResetPasswordPage />} />
+        <Route path="/verify-email/:uid/:token" element={<VerifyEmailPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/category/:categoryId" element={<CategoryPage />} />
         <Route path="/author/:authorId" element={<AuthorPage />} />
