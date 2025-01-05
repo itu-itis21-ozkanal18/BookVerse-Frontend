@@ -19,14 +19,9 @@ function AuthorPage() {
                 setError("");
 
                 const authorResponse = await axios.get(`/api/get-author/?id=${authorId}`);
-                setAuthor(authorResponse.data.data[0]);
-
-                try {
-                    const booksResponse = await axios.get(`/api/get-book/?author_id=${authorId}`);
-                    setBooks(booksResponse.data.data);
-                } catch (bookError) {
-                    setBooks([]);
-                }
+                const authorData = authorResponse.data.data[0];
+                setAuthor(authorData);
+                setBooks(authorData.book_books || []);
             } catch (error) {
                 setError("Author not found");
             } finally {
@@ -53,15 +48,15 @@ function AuthorPage() {
                             </div>
                             <div className="author-stats">
                                 <div className="stat-item">
-                                    <span className="stat-number">{books.length}</span>
+                                    <span className="stat-number">{author.book_count}</span>
                                     <span className="stat-label">Books</span>
                                 </div>
                                 <div className="stat-item">
-                                    <span className="stat-number">0.0</span>
+                                    <span className="stat-number">{author.average_rating?.toFixed(1) || '0.0'}</span>
                                     <span className="stat-label">Avg Rating</span>
                                 </div>
                                 <div className="stat-item">
-                                    <span className="stat-number">0</span>
+                                    <span className="stat-number">{author.fav_book_count}</span>
                                     <span className="stat-label">Favorites</span>
                                 </div>
                             </div>
